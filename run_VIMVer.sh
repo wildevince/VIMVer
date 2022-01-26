@@ -33,7 +33,7 @@ echo "...dependencies ok"
 
 firefox http://127.0.0.1:8000/ &
 
-./VIMVer/manage.py runserver 127.0.0.1:8000 
+./ViralOceanView/manage.py runserver 127.0.0.1:8000 
 
 
 

@@ -22,9 +22,9 @@ We have implemented this project in **python 3.6+**, along with three python pac
 
 The project is still in developper's mode. That means that it will be running in a local server manage by Django.
 
-1. The code is available via the following github repository : https://github.com/wildevince/VIMVer.git.
+1. The code is available via the following github repository : https://github.com/wildevince/ViralOceanView.git.
 ```
-git clone https://github.com/wildevince/VIMVer.git
+git clone https://github.com/wildevince/ViralOceanView.git
 ```
 
 2. If needed to verify your python version and to install the required packages.
@@ -67,7 +67,7 @@ Precision on certain functionalities.
 
 ### Documentation
 
-The documentation, in `.html` format, is in the `VIMVer/docs/` project repository.
+The documentation, in `.html` format, is in the `ViralOceanView/docs/` project repository.
 
 
 ## Citation
