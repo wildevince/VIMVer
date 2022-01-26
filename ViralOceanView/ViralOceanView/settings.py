@@ -135,6 +135,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = (
     path.join(BASE_DIR, 'ViralOceanView', 'static'),
 )
+STATIC_ROOT = path.join(BASE_DIR, 'ViralOceanView', 'static')
 
 
 # Media files (data, in-file, out-file)
