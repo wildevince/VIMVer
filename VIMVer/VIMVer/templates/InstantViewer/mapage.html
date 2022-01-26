@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% block JS.js %}
+<script src="{% static 'InstantViewer/js/InstantViewer.js' %}"></script>
+{% endblock %}
+{% block seqtab %}
+{% load InstantViewer_extras %}
+{% if seq_array %}
+    <div class='header'>
+        <div><b>RefSeq :</b>{{refseq}}</div><div><b>Input :</b>{{inputseq}}</div>
+        </div>
+    <div class="seq-table" id="prot_display">
+        <div class='header'>
+            <div><b>Proteines:</b></div>
+                </div>
+        {% for sub_table in seq_array.prot %}
+            <div class='row'>
+                <div class='accession'>
+                    <div>refSeq</div>
+                    <div>input</div>
+                    <div>match</div>
+                    </div>
+                <div class='numberline start'>{{ sub_table.number_start }}</div>
+                <table class='sequence'>
+                    <tr class='refSeq'>
+                        {{ sub_table.refseq|protAsTable:sub_table.number_start }}
+                        </tr>
+                    <tr class='inputseq'>
+                        {{ sub_table.inputseq|protAsTable:sub_table.number_start }}
+                        </tr>
+                    <tr class='mismatch'>
+                        {{ sub_table.match|protAsTable:sub_table.number_start }}
+                        </tr>
+                    </table>
+                <div class='numberline end'>{{ sub_table.number_end }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    <div class="seq-table" id="nucl_display">
+        <div class='header'><div><b>Nucleotides:</b></div></div>
+        {% for sub_table in seq_array.nucl %}
+            <div class='row'>
+                <div class='accession'>
+                    <div>refSeq</div>
+                    <div>input</div>
+                    <div>match</div>
+                    </div>
+                <div class='numberline start'>{{ sub_table.number_start }}</div>
+                <table class='sequence'>
+                    <tr class='refSeq'>
+                        {{ sub_table.refseq|nuclAsTable:sub_table.number_start }}
+                        </tr>
+                    <tr class='inputseq'>
+                        {{ sub_table.inputseq|nuclAsTable:sub_table.number_start }}
+                        </tr>
+                    <tr class='mismatch'>
+                        {{ sub_table.match|nuclAsTable:sub_table.number_start }}
+                        </tr>
+                    </table>
+                <div class='numberline end'>{{ sub_table.number_end }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    
+    <br/><a href="/delete_all/">Reset all</a><br/>
+    <div class='forms'>
+        <p><a href={% url 'export' "outfile.aligned.fasta" %}>download sequences</a></p>
+        </div>
+    
+    {% endif %}
+
+{% endblock %}

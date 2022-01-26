@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'InstantFinder/css/InstantFinder.css' %}">
+{% endblock %}
+
+{% block JS.js %}
+<script src="{% static 'InstantFinder/js/InstantFinder.js' %}"></script>
+{% endblock %}
+
+{% block subTitle %}Instant Finder{% endblock %}
+
+{% block InstantFinder %}
+{% load InstantFinder_extras %}
+<div class="forms input">
+    <form action="{% url 'index' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ inputSequenceForm.as_p }}
+        <input name='inputFinder' type="submit" value="Blast it"/>
+    </form>
+</div>
+<div><p><a href="https://pangolin.cog-uk.io/">get lineage on Pangolin</a></p><div>
+{% if inputSequence %}
+    <div class='message'>We have found {{ outBlastList|Len }} reference(s) on Wuhan1.</div>
+        {% if outBlastList %}
+            <div id='outBlastList' class='table'>
+                {% for hit in outBlastList %}
+                    <div class='p-row' accession={{ hit.accession }} >
+                        <div class='table-header'>
+                            <div>{{hit.definition}}</div>
+                            <form action="{% url 'index' %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <button type='submit' value={{ hit.accession }} name='pickBlastRef'>pick</button>
+                                </form>
+                            </div>
+                        <div class='table-row'>
+                            <div class='table-col'>
+                                <div>score</div><div>{{ hit.score }}</div>
+                                </div>
+                            <div class='table-col'>
+                                <div>length</div><div>{{ hit|length }}</div>
+                                </div>
+                            <div class='table-col'>
+                                <div>identity</div><div>{{ hit|match }}</div>
+                                </div>
+                            </div>
+                        </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <div class=''>
+        <p><a href={% url 'export' "outfile.nucl.fasta" %}>download all nucleotid sequences only</a></p>
+        <p><a href={% url 'export' "outfile.prot.fasta" %}>download all protein sequences only</a></p>
+    </div>
+{% endif %}
+{% endblock %}
+
