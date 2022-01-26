@@ -25,10 +25,11 @@ Temp_DIR = path.dirname(path.abspath(__file__))
 SECRET_KEY = 'o8h+8c57c&5&85euds=i3=ahk9(3(dsn*)e6jjta_@d-qcignp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # 'localhost', '127.0.0.1'
-ALLOWED_HOSTS = []
+# 'VM', '10.1.2.200'
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -83,8 +84,12 @@ WSGI_APPLICATION = 'ViralOceanView.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'VIMVer', #path.join(BASE_DIR, 'db.sqlite3'),
+        'USER': 'ubu',
+        'PASSWORD': 'luminy',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 

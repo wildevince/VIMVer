@@ -38,7 +38,7 @@ python3 --version
 ```
 python3 -m pip install django
 python3 -m pip install Bio
-python3 -m pip install logomaker
+python3 -m pip install Pillow
 ```
 
 #### Verify your django version ####
