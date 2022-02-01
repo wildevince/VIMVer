@@ -26,12 +26,12 @@ with open('/etc/VIMVer/secret_key.txt') as f:
     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # 'localhost', '127.0.0.1'
 # 'VM', '10.1.2.200'
-ALLOWED_HOSTS = ['VM', '0.0.0.0:8000'] #['localhost', '127.0.0.1']
-
+# 'VM', '0.0.0.0:8000'
+ALLOWED_HOSTS = [] 
 
 # Application definition
 
@@ -88,11 +88,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': path.join(BASE_DIR, 'db.sqlite3'),
-        #'NAME': 'VIMVer', #path.join(BASE_DIR, 'db.sqlite3'),
-        #'USER': 'ubu',
-        #'PASSWORD': 'luminy',
-        #'HOST': 'localhost',
-        #'PORT': '5432',
     }
 }
 
@@ -122,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Paris'
 
 USE_I18N = True
 
@@ -138,6 +133,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = path.join(path.dirname(path.abspath(__file__)), 'static')
 #STATICFILES_DIRS = (path.join(BASE_DIR, 'ViralOceanView', 'static'),)
 
+# django debug toolbar
+INTERNAL_IPS = ['127.0.0.1']
 
 # Media files (data, in-file, out-file)
 
