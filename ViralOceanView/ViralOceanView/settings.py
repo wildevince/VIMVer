@@ -130,8 +130,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = path.join(path.dirname(path.abspath(__file__)), 'static')
-#STATICFILES_DIRS = (path.join(BASE_DIR, 'ViralOceanView', 'static'),)
+#STATIC_ROOT = path.join(path.dirname(path.abspath(__file__)), 'static')
+STATICFILES_DIRS = (path.join(BASE_DIR, 'ViralOceanView', 'static'),)
 
 # django debug toolbar
 INTERNAL_IPS = ['127.0.0.1']
