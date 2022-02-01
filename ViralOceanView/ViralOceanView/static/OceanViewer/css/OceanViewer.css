@@ -4,9 +4,9 @@ body {
 }
 
 #navbox {
-  position: absolute;
+  position: fixed;
   top: 0%;
-  left: 15%;
+  left: 10%;
   width: fit-content;
 }
 #navbox li {
@@ -22,6 +22,17 @@ body {
   border-top-right-radius: 1em;
   height: 1em;
   background-color: rgb(200,200,200);
+}
+
+div.subTitle {
+  position: relative;
+  display: inline-block;
+  margin-top: 3em;
+}
+div.subTitle img {
+  position: fixed;
+  top: 1em;
+  right: 1em;
 }
 
 
@@ -149,7 +160,7 @@ a {
 
 footer {
   padding: 5px;
-  position: relative;
+  position: fixed;
   bottom: 0;
   left: 0;
   width:100%;

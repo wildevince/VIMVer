@@ -25,11 +25,11 @@ Temp_DIR = path.dirname(path.abspath(__file__))
 SECRET_KEY = 'o8h+8c57c&5&85euds=i3=ahk9(3(dsn*)e6jjta_@d-qcignp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # 'localhost', '127.0.0.1'
 # 'VM', '10.1.2.200'
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = [] #['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -84,12 +84,13 @@ WSGI_APPLICATION = 'ViralOceanView.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'VIMVer', #path.join(BASE_DIR, 'db.sqlite3'),
-        'USER': 'ubu',
-        'PASSWORD': 'luminy',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': path.join(BASE_DIR, 'db.sqlite3'),
+        #'NAME': 'VIMVer', #path.join(BASE_DIR, 'db.sqlite3'),
+        #'USER': 'ubu',
+        #'PASSWORD': 'luminy',
+        #'HOST': 'localhost',
+        #'PORT': '5432',
     }
 }
 
@@ -132,8 +133,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = 'static/'
-#STATICFILES_DIRS = (path.join(BASE_DIR, 'ViralOceanView', 'static'),)
-STATIC_ROOT = path.join(Temp_DIR, 'static')
+STATICFILES_DIRS = (path.join(BASE_DIR, 'ViralOceanView', 'static'),)
+#STATIC_ROOT = path.join(Temp_DIR, 'static')
 
 
 # Media files (data, in-file, out-file)
