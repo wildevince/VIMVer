@@ -31,7 +31,7 @@ DEBUG = True
 # 'localhost', '127.0.0.1'
 # 'VM', '10.1.2.200'
 # 'VM', '0.0.0.0:8000'
-ALLOWED_HOSTS = [] 
+ALLOWED_HOSTS = ['VM', '10.1.2.200'] 
 
 # Application definition
 
