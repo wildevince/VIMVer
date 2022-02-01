@@ -30,7 +30,7 @@ DEBUG = False
 
 # 'localhost', '127.0.0.1'
 # 'VM', '10.1.2.200'
-ALLOWED_HOSTS = ['localhost', '127.0.0.1'] #['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['VM', '0.0.0.0:8000'] #['localhost', '127.0.0.1']
 
 
 # Application definition

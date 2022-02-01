@@ -31,9 +31,9 @@ echo "...dependencies ok"
 ###BLOCK-COMMENT
 
 
-firefox http://127.0.0.1:8000/ &
+firefox http://10.1.2.200:8000/ &
 
-ViralOceanView/manage.py runserver 127.0.0.1:8000
+ViralOceanView/manage.py runserver 0.0.0.0:8000
 
 
 
