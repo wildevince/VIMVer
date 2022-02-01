@@ -22,14 +22,15 @@ Temp_DIR = path.dirname(path.abspath(__file__))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'o8h+8c57c&5&85euds=i3=ahk9(3(dsn*)e6jjta_@d-qcignp'
+with open('/etc/secret_key.txt') as f:
+    SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # 'localhost', '127.0.0.1'
 # 'VM', '10.1.2.200'
-ALLOWED_HOSTS = [] #['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1'] #['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'ViralOceanView.urls'
@@ -132,13 +134,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = (path.join(BASE_DIR, 'ViralOceanView', 'static'),)
-#STATIC_ROOT = path.join(Temp_DIR, 'static')
+STATIC_URL = '/static/'
+STATIC_ROOT = path.join(path.dirname(path.abspath(__file__)), 'static')
+#STATICFILES_DIRS = (path.join(BASE_DIR, 'ViralOceanView', 'static'),)
 
 
 # Media files (data, in-file, out-file)
-
 
 # ViralOceanView/data_test/
 DATATEST = path.join(path.dirname(BASE_DIR), "data_test") 
