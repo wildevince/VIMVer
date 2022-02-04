@@ -1,3 +1,4 @@
+from datetime import datetime
 from os import path
 from re import findall, search
 from time import sleep
@@ -6,75 +7,46 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.conf import settings
 
-from .forms import InputFinderForm
-from .models import InputFinder
+from .forms import InputForm, JobForm
+from .models import Input, Job, OutBlast
 
-from OceanViewer.views import home
+from OceanViewer.views import viewer
 from OceanViewer.models import Sequence
-from OceanViewer.scr import cutToString
+from OceanViewer.scr import cutToString, generate_key
 
 from OceanFinder.scr.OceanBlaster import query_to_file, BlastIt, parseOutBlastXml, complete
 from OceanFinder.scr.OceanFinder import searchRefseq_by_accession, my_translate
 
 
-
 class index(TemplateView):
+    template_name = path.join('OceanFinder', 'index.html')
 
-    template_name = path.join("OceanFinder","index.html")
-    _outBlast = []
-    
-    
-    def outBlast(self, arg=[]):
-        if arg:
-            index._outBlast = arg
-        else :
-            return index._outBlast
+    def get(self, request):
+        context = {'input': InputForm()}
+        return render(request, self.template_name, context)
 
 
-    def get(self, request, **kwargs):
-        #print('GET')  ###
-        #print(f"\t*BlastRef.outBlastList lenght: {len(BlastRef.outBlastList)}")
-
-        InputFinder.objects.all().delete()
-        # Sequence.objects.all().delete()
-        # BlastRef.outBlastList = []
-        kwargs['inputSequenceForm'] = InputFinderForm()
-        
-        return render(request, self.template_name, kwargs)
+    def post(self, request):
+        query = InputForm(request.POST)
+        if 'input' in request.POST:
+            if query.is_valid():
+                key = generate_key()
+                while Job.objects.get(id = key):
+                    key = generate_key()
+                query = self.inputFinder(query, key)
+                context = {'query': query, 'input': InputForm(), 'jobKey': key}
+        return render(request, self.template_name, context)
         
 
-    def post(self, request, **kwargs):
-        #print('POST')  ###
-        
-        #print(f"\t*post kwargs: {' '.join([key for key in kwargs])}")
+    def to_finder(self, request):
+        if 'JobKeyForm' in request.POST:
+            job = request.POST.get('JobKeyForm')
+            return finder.get(request, job)
+        ## message ! ERROR
+        return index.get(request)
 
-        inputSequenceForm = InputFinderForm(request.POST or None)
-        kwargs['inputSequenceForm'] = inputSequenceForm
-        
-        ### check
-        #print(f"\t*outBlastList lenght: {len(self.outBlast())}")
-        #for hit in self.outBlast():
-            #print(f"\t\t-accession: {hit['accession']}\t-score: {hit['score']}")
 
-        if 'inputFinder' in request.POST:
-            if inputSequenceForm.is_valid():
-                #print('\tPOST inputSequence')  ###
-                self.inputFinder(inputSequenceForm)
-                kwargs['outBlastList'] = self.outBlast()
-                #kwargs['message'] = "includes pineapples !"
-                kwargs['inputSequence'] = str(InputFinder.objects.all()[0].inputSequence)
-                #print(f"=>input seq header: {kwargs['inputSequence'].split()[0]}")
-                
-        elif 'pickBlastRef' in request.POST:
-            self.pickBlastRef(request.POST.get('pickBlastRef'))
-            #print(f"\t=>home kwargs: {' '.join([key for key in kwargs])}")
-            return home(request)
-        
-        #print(f"\t=>render kwargs: {' '.join([key for key in kwargs])}")
-        return render(request, self.template_name, kwargs)
-        
-    
-    def inputFinder(self, inputSequenceForm):
+    def inputFinder(self, inputSequenceForm:InputForm, jobKey:str):
         """inputSequence formular handler.Called when the formular is submited.
 
         Args:
@@ -83,34 +55,42 @@ class index(TemplateView):
         Returns:
             dict: elements from the dict
         """
-        #print("\t--save inputSequence")
-
-        InputFinder.objects.all().delete()
-        Sequence.objects.all().delete()
-
-        self.outBlast([])
+        #InputFinder.objects.all().delete()   #################
+        #Sequence.objects.all().delete()      #################
 
         inputSequenceForm.save()
-        inputSequence = inputSequenceForm.cleaned_data["inputSequence"]
-        #print(inputSequence)  ###
+        inputSequence = str(inputSequenceForm.cleaned_data["Sequence"])
+        head = inputSequence.split('\n')[0]
+        n = head[1:].split()[0]
+        seq = inputSequence.split('\n')[1:]
+        query = Input(sequence=seq, header=head, name=n)
+
+        job = Job(
+            key= jobKey, 
+            query= query.id, 
+            date=datetime.now().strftime("-%H%M-%d%m%Y")
+            )
 
         # run Blast
         queryFile = query_to_file(inputSequence)
+        job.queryFasta = path.join(settings.MEDIA_ROOT,'OceanFinder','out', queryFile)
+        job.save(['queryFasta'])
         sleep(1)
-        blastn = BlastIt(queryFile, dated=False)
-        sleep(1)
-        if blastn[0]: 
-            #print(f"\n\t->parseOutBlastXml({blastn[1]})")
-            self.outBlast( parseOutBlastXml(blastn[1]) )
 
-            outfileProt = open(path.join(settings.MEDIA_ROOT, 'OceanFinder', 'outfile.prot.fasta'),'w')
-            outfileNucl = open(path.join(settings.MEDIA_ROOT, 'OceanFinder', 'outfile.nucl.fasta'),'w')
-            for ref in self.outBlast():
-                inputName = str(InputFinder.objects.all()[0].inputSequence)
-                inputName = inputName.split()[0][1:]
-                outfileProt.write(f">{inputName}_{ref['name']}\n")
-                outfileNucl.write(f">{inputName}_{ref['name']}\n")
-                my_inputSequence = str(ref['hsp_qseq'])
+        blastn = BlastIt(queryFile, dated=False)
+        job.outBlastXML = path.join(settings.MEDIA_ROOT,'OceanFinder','out', blastn[1])
+        job.save(['outBlastXML'])
+        sleep(1)
+
+        outBlasts = []
+        if blastn[0]: 
+            job_outBlast = parseOutBlastXml(blastn[1]) 
+            outfileProt = open(path.join(settings.MEDIA_ROOT, 'OceanFinder', jobKey+'_outfile.prot.fasta'),'w')
+            outfileNucl = open(path.join(settings.MEDIA_ROOT, 'OceanFinder', jobKey+'_outfile.nucl.fasta'),'w')
+            for hit in job_outBlast:
+                outfileProt.write(f">{n}_{hit['name']}\n")
+                outfileNucl.write(f">{n}_{hit['name']}\n")
+                my_inputSequence = str(hit['hsp_qseq'])
                 if search("TTTAAA[C-]CGGG", my_inputSequence[:len(my_inputSequence)//3]):
                     j = my_inputSequence[:len(my_inputSequence)//3].find('A-C') +1
                     inputSequence_corrected = my_inputSequence[:j] + 'A' + my_inputSequence[j+1:]
@@ -119,23 +99,65 @@ class index(TemplateView):
                     my_inputseq_translate = my_translate(my_inputSequence)
                 outfileProt.write(''.join(cutToString(my_inputseq_translate)))
                 outfileNucl.write(''.join(cutToString(my_inputSequence)))
+                # OutBlast
+                OutBlast(
+                    job= jobKey,
+                    name= n,
+                    definition= hit['definition'],
+                    accession= hit['accession'],
+                    identity= hit['identity'],
+                    score= hit['score'],
+                    sbjct_lenght= hit['sbjct_lenght'],
+                    hsp_hseq= hit['hsp_hseq'],
+                    sbjct_start= hit['sbjct_start'],
+                    sbjct_end= hit['sbjct_end'],
+                    hsp_qseq= my_inputSequence,
+                    query_start= hit['query_start'],
+                    query_end= hit['query_end'],
+                    qseq_transl= my_inputseq_translate
+                )
+                outBlasts += [str(hit['accession'])]
+        job.outBlast = ' '.join(outBlasts)
+        job.save(['outBlast'])
 
-            #for hit in self.outBlast():
-                #print(f"\t\t-accession: {hit['accession']}\t-score: {hit['score']}")
+
+
+
+class finder(TemplateView):
+    template_name = path.join("OceanFinder","finder.html")
+        
+    def get(self, request, jobKey:str=None):
+        if jobKey is None:
+            render(request, index.template_name)
+        context = { 'JobForm': JobForm, 'job': Job.objects.get(key=jobKey) }
+        return render(request, self.template_name, context)
+        
+###############################################################################################
+    def post(self, request, **kwargs):
+        if 'pickBlastRef' in request.POST:
+            pick = request.POST.get('pickBlastRef')
+            self.pickBlastRef(pick)
+            context = {'jobKey':jobKey, 'accNbr':accNbr}
+            return viewer.get(request, context)
+        
+        return render(request, index.template_name)
+        
 
 
     def pickBlastRef(self, pickBlastRefForm, **kwargs):
-        #print('\n->POST pickBlastRef')  ###
 
-        # pick Refseq
         blastRef = pickBlastRefForm.split()
-        # BlastRef : {hit['accession']} {hit['query_start']} {hit['query_end']} {hit['sbjct_start']} {hit['sbjct_end']}
-        #print(f"\t*blastRef: {blastRef}")
+        ### BlastRef : "accession jobKey"
 
         my_refseq = searchRefseq_by_accession(blastRef[0]) #accession 
         ### Caution except my_refSeq = False => search found nothing ???
-        # my_refseq = {'name':name, 'accession':i,'header':record.id[1:], 'sequence':record.seq}
-        for Hit in self.outBlast():
+
+        job = Job.objects.get(key=blastRef[1])
+        outBlast = job.outBlastXML
+        ## ParseXML outBlastXML into Model
+        #################################################################################################################################
+
+        for Hit in outBlast:
             if int(Hit['accession']) == int(my_refseq['accession']):
                 inputSequence = Hit['hsp_qseq']
                 my_refSeq_sequence = Hit['hsp_hseq']

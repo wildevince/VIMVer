@@ -2,6 +2,10 @@
 from re import S, findall
 from os import path
 
+from random import choice
+from string import ascii_letters, digits
+
+
 from Bio import Entrez, SeqIO
 from Bio.Seq import translate
 
@@ -240,3 +244,7 @@ def cutToString(text:str, nbr=120):
         text = text[120:]
     result += (text +'\n')
     return result
+
+
+def generate_key():
+    return ''.join(choice(ascii_letters + digits) for _ in range(6))

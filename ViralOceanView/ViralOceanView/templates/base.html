@@ -37,6 +37,15 @@
    or the raw cds sequence if necessary.</p>
     </div>
 
+  {% if JobForm %}
+    <div class='JobForm'> 
+        <form action="{% url 'index' %}" method="get" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ JobForm.as_p }}
+            <input name='job' type='submit' value='Load Job'>
+        </form>
+  {% endif JobForm %}
+
   <section id="content">
     {% block forms %}{% endblock %}
     {% block seqtab %}{% endblock %}

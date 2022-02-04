@@ -102,7 +102,7 @@ def CheckDataBaseIntegrity():
         #print(output)
 
 
-def query_to_file(query:str):
+def query_to_file(query:str, jobKey:str):
     """create a file in "file/OceanFinder/"
 
     Args:
@@ -111,13 +111,13 @@ def query_to_file(query:str):
     Returns:
         (str): path to file
     """
-    filepath = path.join(settings.MEDIA_ROOT,'OceanFinder','query.fasta')
+    filepath = path.join(settings.MEDIA_ROOT,'OceanFinder', jobKey+'_'+"query.fasta")
     with open(filepath, 'w') as handle:
         handle.write(query)
     return filepath
 
 
-def BlastIt(query, outfile="outBlast", dbType='nucl', dated=True, **kwargs):
+def BlastIt(query, jobKey:str, outfile="outBlast", dbType='nucl', dated=True, **kwargs):
     """Controls arguments before Blast the querry using bash command.
 
     Args:
@@ -144,7 +144,7 @@ def BlastIt(query, outfile="outBlast", dbType='nucl', dated=True, **kwargs):
 
     # argument control : outXML
     dt_string = datetime.now().strftime("-%H%M-%d%m%Y") if dated else ''
-    outXMLPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out', outfile+dt_string+'.xml')
+    outXMLPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out', jobKey+'_'+outfile+dt_string+'.xml')
     if not path.exists(outXMLPath):
         doBashline(f"touch {outXMLPath}")
         #with open(outXMLPath, 'w') as handle:
@@ -165,7 +165,7 @@ def BlastIt(query, outfile="outBlast", dbType='nucl', dated=True, **kwargs):
             cmd="blastp", query=queryPath, outfmt=5, out=outXMLPath, db=dbPath), False)
         sleep(1)
         return (True, path.basename(outXMLPath))
-    return (False,)
+    return (False,path.basename(outXMLPath))
 
 
 def complete(accNumber:int):
@@ -266,12 +266,12 @@ def parseOutBlastXml(outfilename='outBlast.xml', test=False):
                         identity = hsp.identities
                         score = hsp.score
                         outBlastDict[accNumber] = {
-                                                    'name': header, 'identity': identity, 'sbjct_lenght':length, 
-                                                    'score':score, 'definition':alignment.hit_def, 'accession':accNumber,
-                                                    'hsp_qseq':hsp.query, 'hsp_hseq':hsp.sbjct, 
-                                                    'query_start':hsp.query_start, 'query_end':hsp.query_end,  
-                                                    'sbjct_start': hsp.sbjct_start, 'sbjct_end':hsp.sbjct_end
-                                                    }
+                            'name': header, 'identity': identity, 'sbjct_lenght':length, 
+                            'score':score, 'definition':alignment.hit_def, 'accession':accNumber,
+                            'hsp_qseq':hsp.query, 'hsp_hseq':hsp.sbjct, 
+                            'query_start':hsp.query_start, 'query_end':hsp.query_end,  
+                            'sbjct_start': hsp.sbjct_start, 'sbjct_end':hsp.sbjct_end
+                            }
                         #print(f"\t\t\t-{accNumber}: ({header}, {score}, {hsp.query[:6]}, {hsp.sbjct[:6]}, ...)")
     return [hit for key, hit in outBlastDict.items()]
 
