@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.files.storage import FileSystemStorage
 
+from OceanFinder.models import Job
+
 # Create your models here.
 
 fs = FileSystemStorage(location='/OceanViewer/files')
@@ -18,6 +20,7 @@ class Sequence(models.Model):
         max_length=12,
         null=True,
         blank=True)
+    job = models.ForeignKey(to=Job, on_delete=None)
     used_name = models.CharField(default="example_1", max_length=45)
     isRefSeq = models.BooleanField(default=False)
     prot_seq = models.TextField(
@@ -43,22 +46,3 @@ class Sequence(models.Model):
         else:
             return self.__repr__()
 
-
-class select_region(models.Model):
-    """
-    Model
-    managing the selection on the protein sequence
-    ## Attributs
-    boundaries : 'start' and 'end'
-    """
-    start = models.IntegerField(null=True)
-    end = models.IntegerField(null=True)
-
-
-class CurrentLogos(models.Model):
-    """
-    Model
-    managing the logos figures
-    """
-    prot_logo = models.ImageField(storage=fs)
-    cds_logo = models.ImageField(storage=fs)

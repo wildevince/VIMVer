@@ -22,29 +22,31 @@ class index(TemplateView):
     template_name = path.join('OceanFinder', 'index.html')
 
     def get(self, request):
-        context = {'input': InputForm()}
+        context = {'input':InputForm(), 'JobForm':JobForm()}
         return render(request, self.template_name, context)
 
 
     def post(self, request):
         query = InputForm(request.POST)
+
         if 'input' in request.POST:
             if query.is_valid():
+
                 key = generate_key()
                 while Job.objects.get(id = key):
                     key = generate_key()
+
                 query = self.inputFinder(query, key)
-                context = {'query': query, 'input': InputForm(), 'jobKey': key}
-        return render(request, self.template_name, context)
-        
+                context = {
+                    'query': query, 
+                    'input': InputForm(), 
+                    'jobKey': key,
+                    'JobForm':JobForm()
+                    }
+                return render(request, self.template_name, context)
 
-    def to_finder(self, request):
-        if 'JobKeyForm' in request.POST:
-            job = request.POST.get('JobKeyForm')
-            return finder.get(request, job)
-        ## message ! ERROR
         return index.get(request)
-
+        
 
     def inputFinder(self, inputSequenceForm:InputForm, jobKey:str):
         """inputSequence formular handler.Called when the formular is submited.
@@ -122,29 +124,32 @@ class index(TemplateView):
 
 
 
-
 class finder(TemplateView):
     template_name = path.join("OceanFinder","finder.html")
         
-    def get(self, request, **kwargs):
-        if 'jobKey' in kwargs:
-            jobKey = kwargs['jobKey']
-            if jobKey is not None:
-                context = { 'JobForm': JobForm, 'job': Job.objects.get(key=jobKey) }
+    def get(self, request):
+        context = {'JobForm':JobForm()}
+
+        if 'jobKey' in request.GET:
+            jobKey = request.GET.get('jobKey')
+            if jobKey:
+                context['job'] = Job.objects.get(key=jobKey)
+                context['outBlastList'] = OutBlast.objects.filter(job=jobKey).values()
                 return render(request, self.template_name, context)
-        else :
-            render(request, index.template_name)
+        
+        return index.get(request)
         
         
     def post(self, request, **kwargs):
+
         if 'pickBlastRef' in request.POST:
             pick = request.POST.get('pickBlastRef')
             accNbr, jobKey = self.pickBlastRef(pick)
-            job = Job.objects.get(key=jobKey)
-            context = {'job':job, 'accNbr':accNbr}
+            #job = Job.objects.get(key=jobKey)
+            context = {'jobKey':jobKey, 'accNbr':accNbr}
             return viewer.get(request, context)
-        
-        return render(request, index.template_name)
+
+        return index.get(request)
         
 
     def pickBlastRef(self, pickBlastRefForm, **kwargs):

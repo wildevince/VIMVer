@@ -20,6 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('OceanViewer.urls')),
-    path('InstantFinder/', include('OceanFinder.urls')),
+    path('', include('OceanFinder.urls')),
     #path('OceanBase/', include('OceanBase.urls')),
 ]

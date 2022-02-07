@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from re import S, findall
-from os import path
 
 from random import choice
 from string import ascii_letters, digits
@@ -9,82 +8,6 @@ from string import ascii_letters, digits
 from Bio import Entrez, SeqIO
 from Bio.Seq import translate
 
-from django.conf import settings
-
-
-
-def get_nucl_accNbr(accNbr):
-    """
-    input: accession number
-
-    little recursivity (if necessary)
-
-    return: the nucleotide accession number
-    """
-    Entrez.email = "oceanViewer@example.com"
-    try:
-        with Entrez.efetch(
-            db='nucleotide', rettype='gb', temode='text', id=accNbr
-        ) as handle:
-            seq_record = SeqIO.read(handle, 'gb')
-        return seq_record.id
-    except:
-        try:
-            with Entrez.efetch(
-                db='protein', rettype='gb', temode='text', id=accNbr
-            ) as handle:
-                seq_record = SeqIO.read(handle, 'gb')
-                for feat in seq_record.features:
-                    if feat.type == "CDS":
-                        accNbr = ''.join(feat.qualifiers['coded_by']).split(':')[0]
-                        return accNbr
-        except:
-            return None
-
-
-def get_CDS(accNbr, out_CDS={}):
-    """Extract the CDS from a ncbi request
-
-    Args:
-        accNbr (str): accession number.
-
-    Returns:
-        (dict): {'header':(str), 'sequence':(str)}  
-    """
-    Entrez.email = "OceanViewer@example.com"
-    try:
-        with Entrez.efetch(
-            db='nucleotide', rettype='gb', temode='text', id=accNbr
-        ) as handle:
-            seq_record = SeqIO.read(handle, 'gb')
-        seqId = seq_record.id
-        for feat in seq_record.features:
-            if feat.type == "CDS":
-                result = findall("([\d]+(:|..)[\d]+)", str(feat.location))
-                for thing in result:
-                    thing = thing[0].split(thing[1])
-                    start = int(thing[0])
-                    end = int(thing[1])
-                    out_CDS[seqId] = {'header': "", 'sequence': ""}
-                    out_CDS[seqId]["header"] = f"{seqId}:cds:{start}..{end}:"
-                    line = str(seq_record.seq)[start:end]
-                    while(len(line) > 120):
-                        out_CDS[seqId]["sequence"] += (line[0:120]+'\n')
-                        line = line[120:]
-                    out_CDS[seqId]["sequence"] += (line+'\n')
-    except:
-        try:
-            with Entrez.efetch(
-                db='protein', rettype='gb', temode='text', id=accNbr
-            ) as handle:
-                seq_record = SeqIO.read(handle, 'gb')
-                for feat in seq_record.features:
-                    if feat.type == "CDS":
-                        accNbr = ''.join(feat.qualifiers['coded_by']).split(':')[0]
-                        return get_CDS(str(accNbr), out_CDS)
-        except:
-            return None
-    return out_CDS[accNbr]
 
 
 def retroTranslate(protein, cds):
