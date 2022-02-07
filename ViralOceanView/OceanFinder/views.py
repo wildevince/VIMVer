@@ -82,7 +82,7 @@ class index(TemplateView):
         job.save(['outBlastXML'])
         sleep(1)
 
-        outBlasts = []
+        #outBlasts = []
         if blastn[0]: 
             job_outBlast = parseOutBlastXml(blastn[1]) 
             outfileProt = open(path.join(settings.MEDIA_ROOT, 'OceanFinder', jobKey+'_outfile.prot.fasta'),'w')
@@ -116,9 +116,9 @@ class index(TemplateView):
                     query_end= hit['query_end'],
                     qseq_transl= my_inputseq_translate
                 )
-                outBlasts += [str(hit['accession'])]
-        job.outBlast = ' '.join(outBlasts)
-        job.save(['outBlast'])
+                #outBlasts.append(str(hit['accession']))
+        #job.outBlast = ' '.join(outBlasts)
+        #job.save(['outBlast'])
 
 
 
@@ -126,61 +126,65 @@ class index(TemplateView):
 class finder(TemplateView):
     template_name = path.join("OceanFinder","finder.html")
         
-    def get(self, request, jobKey:str=None):
-        if jobKey is None:
+    def get(self, request, **kwargs):
+        if 'jobKey' in kwargs:
+            jobKey = kwargs['jobKey']
+            if jobKey is not None:
+                context = { 'JobForm': JobForm, 'job': Job.objects.get(key=jobKey) }
+                return render(request, self.template_name, context)
+        else :
             render(request, index.template_name)
-        context = { 'JobForm': JobForm, 'job': Job.objects.get(key=jobKey) }
-        return render(request, self.template_name, context)
         
-###############################################################################################
+        
     def post(self, request, **kwargs):
         if 'pickBlastRef' in request.POST:
             pick = request.POST.get('pickBlastRef')
-            self.pickBlastRef(pick)
-            context = {'jobKey':jobKey, 'accNbr':accNbr}
+            accNbr, jobKey = self.pickBlastRef(pick)
+            job = Job.objects.get(key=jobKey)
+            context = {'job':job, 'accNbr':accNbr}
             return viewer.get(request, context)
         
         return render(request, index.template_name)
         
 
-
     def pickBlastRef(self, pickBlastRefForm, **kwargs):
-
         blastRef = pickBlastRefForm.split()
         ### BlastRef : "accession jobKey"
 
         my_refseq = searchRefseq_by_accession(blastRef[0]) #accession 
         ### Caution except my_refSeq = False => search found nothing ???
+        if my_refseq is False:
+            return (False, "refSeq not found") ######### raise exception : "refSeq not found" !
 
-        job = Job.objects.get(key=blastRef[1])
-        outBlast = job.outBlastXML
-        ## ParseXML outBlastXML into Model
-        #################################################################################################################################
+        #job = Job.objects.get(key=blastRef[1])
+        #outBlast_accNbrs = job.outBlast.split()
+        outBlast = OutBlast.objects.filter(job=blastRef[1]).values()
+        pick_id:int 
 
         for Hit in outBlast:
             if int(Hit['accession']) == int(my_refseq['accession']):
                 inputSequence = Hit['hsp_qseq']
                 my_refSeq_sequence = Hit['hsp_hseq']
+                pick_id = Hit['id']
+                inputName = Hit['name']
+                accession = int(my_refseq['accession'])
                 break
 
         # refSeq
         my_refSeq_name = my_refseq['name'] +':'+ my_refseq['header'].split(':')[1]
 
         # inputSequence
-        inputName = InputFinder.objects.all()[0].inputSequence
-        inputName = inputName.split()[0][1:]
 
         # check length ?
         length_original = findall(":(\d+)_", my_refseq['header'])[0]
         length_outBlast = len(my_refSeq_sequence)
         if length_original != length_outBlast:
-            resMuscle = complete(accNumber=int(my_refseq['accession']))
+            resMuscle = complete(accNumber= accession)
             inputSequence = str(resMuscle['hsp_qseq'])
             my_refSeq_sequence = str(resMuscle['hsp_hseq'])
         ##
         my_refSeq_translate = my_translate(my_refSeq_sequence)
         my_inputseq_translate = my_translate(inputSequence)
-
 
         # frameshift ?
         score = 0
@@ -202,7 +206,7 @@ class finder(TemplateView):
             my_inputseq_translate = my_translate(inputSequence_corrected)
 
         # export
-        with open(path.join(settings.MEDIA_ROOT, 'OceanFinder', 'outfile.aligned.fasta'),'w') as handle:
+        with open(path.join(settings.MEDIA_ROOT, 'OceanFinder', blastRef[1]+'_outfile.aligned.fasta'),'w') as handle:
             handle.write(f">{my_refSeq_name}_nucl\n")
             handle.write(''.join(cutToString(my_refSeq_sequence))) 
             handle.write(f">{my_refSeq_name}_prot\n")
@@ -212,12 +216,19 @@ class finder(TemplateView):
             handle.write(f">{inputName}_prot\n")
             handle.write(''.join(cutToString(my_inputseq_translate))) 
 
+        # update OutBlast !
+        pickBlast = OutBlast.objects.get(id=pick_id)
+        pickBlast.hsp_hseq = my_refSeq_sequence
+        pickBlast.hseq_transl = my_refSeq_translate
+        pickBlast.hsp_qseq = inputSequence
+        pickBlast.qseq_transl = my_inputseq_translate
+        pickBlast.save(['hsp_hseq', 'hseq_transl', 'hsp_qseq', 'qseq_transl'])
+
         # InputFinder.objects.all().delete()
         # preparing alignemnt
-        Sequence.objects.all().delete()
-        Sequence(used_name=my_refSeq_name, isRefSeq=True,
+        if not Sequence.objects.filter(job=blastRef[1]):
+            Sequence(used_name=my_refSeq_name, isRefSeq=True, job=blastRef[1],
                 prot_seq=str(my_refSeq_translate), cds_seq=my_refSeq_sequence).save()
-
-        Sequence(used_name=str(inputName), prot_seq=str(my_inputseq_translate), cds_seq=inputSequence).save()
-
+            Sequence(used_name=str(inputName), job=blastRef[1], prot_seq=str(my_inputseq_translate), cds_seq=inputSequence).save()
+        return (accession, blastRef[1])
 

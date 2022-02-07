@@ -23,7 +23,7 @@ class Job(models.Model):
     date = models.DateTimeField()
     queryFasta = models.FilePathField()
     outBlastXML = models.FilePathField()
-    outBlast = models.CharField() ######## FK
+    #outBlast = models.CharField() ######## FK
 
 
 class OutBlast(models.Model):
@@ -35,11 +35,14 @@ class OutBlast(models.Model):
     identity = models.SmallIntegerField()
     score = models.SmallIntegerField()
     sbjct_lenght = models.IntegerField()
-    hsp_hseq = models.CharField()
+
+    hsp_hseq = models.CharField()  # my_refSeq_sequence
     sbjct_start = models.IntegerField()
     sbjct_end = models.IntegerField()
-    hsp_qseq = models.CharField()
+    hseq_transl = models.CharField()  # my_refSeq_translate
+
+    hsp_qseq = models.CharField()  # inputSequence
     query_start = models.IntegerField()
     query_end = models.IntegerField()
-    qseq_transl = models.CharField()
+    qseq_transl = models.CharField()  # my_inputseq_translate
 

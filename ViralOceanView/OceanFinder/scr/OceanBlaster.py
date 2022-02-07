@@ -111,7 +111,7 @@ def query_to_file(query:str, jobKey:str):
     Returns:
         (str): path to file
     """
-    filepath = path.join(settings.MEDIA_ROOT,'OceanFinder', jobKey+'_'+"query.fasta")
+    filepath = path.join(settings.MEDIA_ROOT,'OceanFinder', jobKey+"_query.fasta")
     with open(filepath, 'w') as handle:
         handle.write(query)
     return filepath
@@ -168,7 +168,7 @@ def BlastIt(query, jobKey:str, outfile="outBlast", dbType='nucl', dated=True, **
     return (False,path.basename(outXMLPath))
 
 
-def complete(accNumber:int):
+def complete(accNumber:int, jobKey:str):
         """call Muscle to realign proprely.
 
         Args:
@@ -178,9 +178,9 @@ def complete(accNumber:int):
             [dict]: ['name', 'identity', 'sbjct_lenght', 'score', 'definition', 'accession',
                     'hsp_qseq', 'hsp_hseq', 'query_start', 'query_end', 'sbjct_start', 'sbjct_end']
         """
-        queryPath = path.join(settings.MEDIA_ROOT,'OceanFinder','query.fasta')
-        outPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out', f"out{accNumber}_muscle.fasta")
-        inPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out', f"in{accNumber}_muscle.fasta")
+        queryPath = path.join(settings.MEDIA_ROOT,'OceanFinder',jobKey+'_query.fasta')
+        outPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out', f"{jobKey}_out{accNumber}_muscle.fasta")
+        inPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out', f"{jobKey}_in{accNumber}_muscle.fasta")
 
         with open(queryPath) as handle:
             for record in SeqIO.parse(handle, 'fasta'):
@@ -231,7 +231,7 @@ def complete(accNumber:int):
         return res 
 
 
-def parseOutBlastXml(outfilename='outBlast.xml', test=False):
+def parseOutBlastXml(prefix, test=False):
 
     def extractHeader(line):
         res = findall("\[(.+)\]", line)[0]
@@ -242,7 +242,7 @@ def parseOutBlastXml(outfilename='outBlast.xml', test=False):
     DataOut = DATAOUT if test else path.join(settings.MEDIA_ROOT,'OceanFinder','out')
     
     #outBlastFile = outBlastXML.objects.all()[0].file
-    outBlastFile = path.join(DataOut, outfilename)
+    outBlastFile = path.join(DataOut, prefix+'_outBlast.xml')
     if test :
         print(outBlastFile)
     if not path.exists(outBlastFile):
