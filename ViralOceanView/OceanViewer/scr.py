@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-from re import S, findall
 
 from random import choice
 from string import ascii_letters, digits
 
 
-from Bio import Entrez, SeqIO
 from Bio.Seq import translate
 
 

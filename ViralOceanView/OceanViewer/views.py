@@ -1,17 +1,17 @@
 
-from os import listdir, path, remove
+from os import path
 
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.conf import settings
-from matplotlib.style import context
 
-from OceanViewer.models import Sequence
-from ViralOceanView.OceanFinder.forms import JobForm
-from ViralOceanView.OceanFinder.models import Job
-from ViralOceanView.OceanFinder.views import index
+from .models import Sequence
 from .scr import generate3rdline, giveMe_seqArray
+
+from OceanFinder.forms import JobForm
+from OceanFinder.models import Job
+#from OceanFinder.views import index
 
 
 # Create your views here.
@@ -42,7 +42,7 @@ class viewer(TemplateView):
             #else: 
                 # raise exception : job not found !
 
-        return index.get(request)
+        return render(request, "OceanViewer/viewer.html", {'JobForm':JobForm()})  #index.get(request)
         
 
     #def post(self, request, **kwargs):
@@ -61,4 +61,4 @@ def export(request, filepath):
         response = HttpResponse(handle, content_type=dirpath)
         response['Content-Disposition'] = f"attachment; filename={filepath}"
         return response
-    return viewer.get(request)
+    return viewer.get(viewer, request)

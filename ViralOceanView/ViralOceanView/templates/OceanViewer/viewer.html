@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
+
 {% block JS.js %}
 <script src="{% static 'OceanViewer/js/OceanViewer.js' %}"></script>
 {% endblock %}
-{% block seqtab %}
+
+{% block content %}
 {% load OceanViewer_extras %}
 {% if seq_array %}
     <div class='header'>

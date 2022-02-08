@@ -20,7 +20,7 @@ class Sequence(models.Model):
         max_length=12,
         null=True,
         blank=True)
-    job = models.ForeignKey(to=Job, on_delete=None)
+    job = models.ForeignKey(to=Job, on_delete=models.CASCADE)
     used_name = models.CharField(default="example_1", max_length=45)
     isRefSeq = models.BooleanField(default=False)
     prot_seq = models.TextField(

@@ -32,20 +32,20 @@ class index(TemplateView):
         if 'input' in request.POST:
             if query.is_valid():
 
-                key = generate_key()
-                while Job.objects.get(id = key):
-                    key = generate_key()
+                jobKey = generate_key()
+                while len(Job.objects.filter(key = jobKey))>0:
+                    jobKey = generate_key()
 
-                query = self.inputFinder(query, key)
+                query = self.inputFinder(query, jobKey)
                 context = {
                     'query': query, 
                     'input': InputForm(), 
-                    'jobKey': key,
+                    'jobKey': jobKey,
                     'JobForm':JobForm()
                     }
                 return render(request, self.template_name, context)
 
-        return index.get(request)
+        return index.get(index, request)
         
 
     def inputFinder(self, inputSequenceForm:InputForm, jobKey:str):
@@ -65,12 +65,10 @@ class index(TemplateView):
         head = inputSequence.split('\n')[0]
         n = head[1:].split()[0]
         seq = inputSequence.split('\n')[1:]
-        query = Input(sequence=seq, header=head, name=n)
+        Input(sequence=seq, header=head, name=n, job=jobKey)
 
         job = Job(
             key= jobKey, 
-            query= query.id, 
-            date=datetime.now().strftime("-%H%M-%d%m%Y")
             )
 
         # run Blast
@@ -137,7 +135,7 @@ class finder(TemplateView):
                 context['outBlastList'] = OutBlast.objects.filter(job=jobKey).values()
                 return render(request, self.template_name, context)
         
-        return index.get(request)
+        return index.get(index, request)
         
         
     def post(self, request, **kwargs):
@@ -145,11 +143,10 @@ class finder(TemplateView):
         if 'pickBlastRef' in request.POST:
             pick = request.POST.get('pickBlastRef')
             accNbr, jobKey = self.pickBlastRef(pick)
-            #job = Job.objects.get(key=jobKey)
             context = {'jobKey':jobKey, 'accNbr':accNbr}
-            return viewer.get(request, context)
+            return viewer.get(viewer, request, context)
 
-        return index.get(request)
+        return index.get(index, request)
         
 
     def pickBlastRef(self, pickBlastRefForm, **kwargs):
@@ -161,8 +158,6 @@ class finder(TemplateView):
         if my_refseq is False:
             return (False, "refSeq not found") ######### raise exception : "refSeq not found" !
 
-        #job = Job.objects.get(key=blastRef[1])
-        #outBlast_accNbrs = job.outBlast.split()
         outBlast = OutBlast.objects.filter(job=blastRef[1]).values()
         pick_id:int 
 

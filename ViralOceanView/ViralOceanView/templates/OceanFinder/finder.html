@@ -8,9 +8,7 @@
 <script src="{% static 'OceanFinder/js/OceanFinder.js' %}"></script>
 {% endblock %}
 
-{% block subTitle %}Instant Finder{% endblock %}
-
-{% block OceanFinder %}
+{% block content %}
 {% load OceanFinder_extras %}
 
 <div><p><a href="https://pangolin.cog-uk.io/">get lineage on Pangolin</a></p><div>
@@ -42,12 +40,12 @@
                         </div>
                 {% endfor %}
             </div>
-        {% endif outBlastList%}
+        {% endif %}
     </div>
     <div class=''>
         <p><a href={% url 'export' "outfile.nucl.fasta" %}>download all nucleotid sequences only</a></p>
         <p><a href={% url 'export' "outfile.prot.fasta" %}>download all protein sequences only</a></p>
     </div>
-{% endif jobKey %}
+{% endif  %}
 {% endblock %}
 

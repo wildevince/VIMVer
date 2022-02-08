@@ -1,6 +1,5 @@
 from django import template
 from django.utils.safestring import mark_safe
-from OceanViewer.models import select_region
 
 
 register = template.Library()
