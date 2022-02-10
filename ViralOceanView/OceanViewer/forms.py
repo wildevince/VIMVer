@@ -2,7 +2,6 @@ from django import forms
 from .models import Sequence
 from .scr import re_align
 
-
 class SequenceForm(forms.ModelForm):
     """
     ModelForm
@@ -28,5 +27,3 @@ class SequenceForm(forms.ModelForm):
         prot_seq = ''.join(self.cleaned_data.get('prot_seq'))
         cds_seq = ''.join(cds_seq.split())
         return re_align(prot_seq, cds_seq)
-
-

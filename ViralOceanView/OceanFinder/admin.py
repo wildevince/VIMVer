@@ -5,3 +5,4 @@ from .models import Input, Job, OutBlast
 admin.site.register(Input)
 admin.site.register(Job)
 admin.site.register(OutBlast)
+

@@ -1,32 +1,40 @@
 from datetime import datetime
-from pickle import TRUE
 from django.db import models
 
 
 # Create your models here.
 
 class Job(models.Model):
-    key = models.CharField(primary_key=True, max_length=6)
-    date = models.DateTimeField(default=datetime.now)
+    #id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
+    key = models.CharField(unique=True, max_length=6, verbose_name='KEY')
+    date = models.DateTimeField(auto_now_add=True)
     queryFasta = models.FilePathField()
     outBlastXML = models.FilePathField()
-    #outBlast = models.CharField() ######## FK
+
+    #@classmethod
+    #def auto_clean():
+    #    date_laps = 24 #hours
+    #    d, H = datetime.now().strftime('%d %H').split()
+        
+    class Meta:
+        ordering = ['date']
 
 
 class Input(models.Model):
-    id = models.PositiveIntegerField(primary_key=True)
     sequence = models.TextField(
         verbose_name="input fasta sequence",
         default= ">input seq test\nATGGGG---",
         blank=False)
     header = models.CharField(max_length=50)
     name = models.CharField(max_length=25)
-    job = models.ForeignKey(to=Job, on_delete=models.CASCADE)
+    job = models.CharField(max_length=6)  #FK Job
+
+    class Meta:
+        ordering = ['name']
 
 
 class OutBlast(models.Model):
-    id = models.PositiveIntegerField(primary_key=True)
-    job = models.ForeignKey(to=Job, on_delete=models.CASCADE)
+    job = models.CharField(max_length=6)  #FK Job
     name = models.CharField(max_length=25)
     definition = models.CharField(max_length=50)
     accession = models.SmallIntegerField()
@@ -43,4 +51,9 @@ class OutBlast(models.Model):
     query_start = models.IntegerField()
     query_end = models.IntegerField()
     qseq_transl = models.TextField()  # my_inputseq_translate
+
+    class Meta:
+        ordering = ['name']
+
+
 

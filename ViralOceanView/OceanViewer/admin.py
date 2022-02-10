@@ -3,4 +3,5 @@ from .models import Sequence
 
 # Register your models here.
 
+
 admin.site.register(Sequence)

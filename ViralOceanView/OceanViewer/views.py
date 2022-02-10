@@ -23,7 +23,7 @@ class viewer(TemplateView):
         if 'jobKey' in kwargs:
             jobKey = kwargs['jobKey']
             context = {'JobForm':JobForm}
-            context['job'] = Job.objects.get(id=jobKey)
+            context['job'] = Job.objects.get(key=jobKey)
             sequences = Sequence.objects.filter(job=jobKey)
             if len(sequences)>0:
                 refseq = sequences.get(isRefSeq=True)

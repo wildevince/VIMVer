@@ -31,7 +31,7 @@ class index(TemplateView):
 
         if 'input' in request.POST:
             if query.is_valid():
-
+                
                 jobKey = generate_key()
                 while len(Job.objects.filter(key = jobKey))>0:
                     jobKey = generate_key()
@@ -65,11 +65,12 @@ class index(TemplateView):
         head = inputSequence.split('\n')[0]
         n = head[1:].split()[0]
         seq = inputSequence.split('\n')[1:]
+
+        job = Job(key= jobKey)
+
         Input(sequence=seq, header=head, name=n, job=jobKey)
 
-        job = Job(
-            key= jobKey, 
-            )
+        
 
         # run Blast
         queryFile = query_to_file(inputSequence)
