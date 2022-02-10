@@ -1,6 +1,9 @@
 from django.db import models
 from django.core.files.storage import FileSystemStorage
 
+from OceanFinder.models import Job
+
+
 # Create your models here.
 
 fs = FileSystemStorage(location='/OceanViewer/files')
@@ -13,12 +16,13 @@ class Sequence(models.Model):
     genbank accession number, used name,
     protein and cds sequences
     """
+    job = models.ForeignKey(to=Job, on_delete=models.CASCADE)  #FK Job
+
     accNbr_gb = models.CharField(
         verbose_name="genbank accession number",
         max_length=12,
         null=True,
         blank=True)
-    job = models.CharField(max_length=6)  #FK Job
     used_name = models.CharField(default="example_1", max_length=45)
     isRefSeq = models.BooleanField(default=False)
     prot_seq = models.TextField(

@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.db import models
 
 
@@ -6,41 +5,41 @@ from django.db import models
 
 class Job(models.Model):
     #id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
-    key = models.CharField(unique=True, max_length=6, verbose_name='KEY')
-    date = models.DateTimeField(auto_now_add=True)
-    queryFasta = models.FilePathField()
-    outBlastXML = models.FilePathField()
+    key = models.CharField(primary_key=True, max_length=6)  #PK
+    date = models.CharField(max_length=5, null=True)
+    #date = models.DateTimeField(auto_now_add=True)
+    queryFasta = models.FilePathField(null=True)
+    outBlastXML = models.FilePathField(null=True)
 
-    #@classmethod
-    #def auto_clean():
-    #    date_laps = 24 #hours
-    #    d, H = datetime.now().strftime('%d %H').split()
-        
     class Meta:
         ordering = ['date']
 
 
 class Input(models.Model):
+    #id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
+    job = models.ForeignKey(to=Job, on_delete=models.CASCADE)  #FK Job
+    #job = models.CharField(max_length=6)  #FK Job
+
     sequence = models.TextField(
         verbose_name="input fasta sequence",
         default= ">input seq test\nATGGGG---",
         blank=False)
-    header = models.CharField(max_length=50)
+    header = models.TextField()
     name = models.CharField(max_length=25)
-    job = models.CharField(max_length=6)  #FK Job
-
-    class Meta:
-        ordering = ['name']
 
 
 class OutBlast(models.Model):
-    job = models.CharField(max_length=6)  #FK Job
+    #id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
+    job = models.ForeignKey(to=Job, on_delete=models.CASCADE)  #FK Job
+    #job = models.CharField(max_length=6)  #FK Job
+    
     name = models.CharField(max_length=25)
-    definition = models.CharField(max_length=50)
+    definition = models.TextField()
     accession = models.SmallIntegerField()
+
     identity = models.SmallIntegerField()
     score = models.SmallIntegerField()
-    sbjct_lenght = models.IntegerField()
+    sbjct_length = models.IntegerField()
 
     hsp_hseq = models.TextField()  # my_refSeq_sequence
     sbjct_start = models.IntegerField()
@@ -51,9 +50,4 @@ class OutBlast(models.Model):
     query_start = models.IntegerField()
     query_end = models.IntegerField()
     qseq_transl = models.TextField()  # my_inputseq_translate
-
-    class Meta:
-        ordering = ['name']
-
-
 

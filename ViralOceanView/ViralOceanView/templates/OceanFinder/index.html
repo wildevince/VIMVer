@@ -12,11 +12,11 @@
 
     {% if jobKey %}
     <div id='jobKey'>
-        <p>{{  jobKey }}</P>
-            <form action="{% url 'finder' %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <button type='submit' value="{{ jobKey }}" name='JobKeyForm'>result</button>
-                </form>
+        <p>{{ jobKey }}</p>
+        <form action="{% url 'finder' %}" method="get" enctype="multipart/form-data">
+            csrf_token
+            <button type='submit' value="{{ jobKey }}" name='JobKeyForm'>{{ jobKey }}</button>
+            </form>
         </div>
     {% endif  %}
 

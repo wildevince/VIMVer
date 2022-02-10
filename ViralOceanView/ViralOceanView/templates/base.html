@@ -29,11 +29,15 @@
     <h1>Viral Instant Mutation Viewer : VIMVer</h1>
     <img id="instantVariantLogo" src="{% static 'OceanViewer/img/instantVariantLogo.png' %}" width='128' height='128'>
   </div>
-    
+   
+  {% if message %}
+    <div class='message'><p>{{ message }}</p></div>
+  {% endif %}
+
   {% if JobForm %}
     <div class='JobForm'> 
         <form action="{% url 'finder' %}" method="get" enctype="multipart/form-data">
-            {% csrf_token %}
+            csrf_token
             {{ JobForm.as_p }}
             <input name='job' type='submit' value='Load Job'>
         </form>

@@ -6,7 +6,7 @@ class InputForm(forms.ModelForm):
     """
     class Meta:
         model = Input
-        fields = ('sequence',)
+        fields = ['sequence']
 
 
 class PickBlastRef(forms.Form):
@@ -14,9 +14,10 @@ class PickBlastRef(forms.Form):
 
 
 class JobForm(forms.ModelForm):
+    
     class Meta:
         model  = Job
-        fields = ('key',)
+        fields = ['key']
 
 
 class JobKeyForm(forms.Form):

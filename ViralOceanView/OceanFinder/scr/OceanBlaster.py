@@ -111,13 +111,13 @@ def query_to_file(query:str, jobKey:str):
     Returns:
         (str): path to file
     """
-    filepath = path.join(settings.MEDIA_ROOT,'OceanFinder', jobKey+"_query.fasta")
+    filepath = path.join(settings.MEDIA_ROOT,'OceanFinder','out', jobKey+"_query.fasta")
     with open(filepath, 'w') as handle:
         handle.write(query)
     return filepath
 
 
-def BlastIt(query, jobKey:str, outfile="outBlast", dbType='nucl', dated=True, **kwargs):
+def BlastIt(query, jobKey:str, dbType='nucl', **kwargs):
     """Controls arguments before Blast the querry using bash command.
 
     Args:
@@ -130,7 +130,7 @@ def BlastIt(query, jobKey:str, outfile="outBlast", dbType='nucl', dated=True, **
             blast{n or p} -q {path to query} -db {path to dataBase} -o {path to outXML}
     """
     # argument control : query
-    queryPath = path.join(settings.MEDIA_ROOT,'OceanFinder',query)
+    queryPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out',query)
     if not path.exists(queryPath):
         return (False, "Query file doesn't exist")
 
@@ -143,13 +143,8 @@ def BlastIt(query, jobKey:str, outfile="outBlast", dbType='nucl', dated=True, **
         return (False, "plz choose : 'nucl' or 'prot'")
 
     # argument control : outXML
-    dt_string = datetime.now().strftime("-%H%M-%d%m%Y") if dated else ''
-    outXMLPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out', jobKey+'_'+outfile+dt_string+'.xml')
-    if not path.exists(outXMLPath):
-        doBashline(f"touch {outXMLPath}")
-        #with open(outXMLPath, 'w') as handle:
-        #    pass
-        # return (False, f"Not found : {outXMLPath}")
+    outXMLPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out', jobKey+'_outBlast.xml')
+    #print(outXMLPath)
 
     # argument control : kwargs (more arguments ?)
     if not 'log' in kwargs:
@@ -178,7 +173,7 @@ def complete(accNumber:int, jobKey:str):
             [dict]: ['name', 'identity', 'sbjct_lenght', 'score', 'definition', 'accession',
                     'hsp_qseq', 'hsp_hseq', 'query_start', 'query_end', 'sbjct_start', 'sbjct_end']
         """
-        queryPath = path.join(settings.MEDIA_ROOT,'OceanFinder',jobKey+'_query.fasta')
+        queryPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out', jobKey+'_query.fasta')
         outPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out', f"{jobKey}_out{accNumber}_muscle.fasta")
         inPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out', f"{jobKey}_in{accNumber}_muscle.fasta")
 
@@ -231,7 +226,7 @@ def complete(accNumber:int, jobKey:str):
         return res 
 
 
-def parseOutBlastXml(prefix, test=False):
+def parseOutBlastXml(jobkey):
 
     def extractHeader(line):
         res = findall("\[(.+)\]", line)[0]
@@ -239,12 +234,16 @@ def parseOutBlastXml(prefix, test=False):
             res = res.split(':')[1]
         return str(res)
 
-    DataOut = DATAOUT if test else path.join(settings.MEDIA_ROOT,'OceanFinder','out')
+    DataOut = path.join(settings.MEDIA_ROOT,'OceanFinder','out')
     
     #outBlastFile = outBlastXML.objects.all()[0].file
-    outBlastFile = path.join(DataOut, prefix+'_outBlast.xml')
-    if test :
-        print(outBlastFile)
+    outBlastFile = path.join(DataOut, jobkey+'_outBlast.xml')
+    #print(outBlastFile)
+    wait_turn = 0
+    while (not path.exists(outBlastFile)) and wait_turn<10:
+        wait_turn += 1
+        print(f"waited {wait_turn} seconds")
+        sleep(1)
     if not path.exists(outBlastFile):
         return False
     
@@ -260,13 +259,13 @@ def parseOutBlastXml(prefix, test=False):
                     pickme = False
                     if accNumber in outBlastDict:
                         if not outBlastDict[accNumber]['score'] == '???':
-                            outBlastDict[accNumber] = complete(int(accNumber))
+                            outBlastDict[accNumber] = complete(int(accNumber), jobkey)
                     else:
                         #identity = f"{float(hsp.identities)/float(length)*100}%"
                         identity = hsp.identities
                         score = hsp.score
                         outBlastDict[accNumber] = {
-                            'name': header, 'identity': identity, 'sbjct_lenght':length, 
+                            'name': header, 'identity': identity, 'sbjct_length':length, 
                             'score':score, 'definition':alignment.hit_def, 'accession':accNumber,
                             'hsp_qseq':hsp.query, 'hsp_hseq':hsp.sbjct, 
                             'query_start':hsp.query_start, 'query_end':hsp.query_end,  
@@ -275,42 +274,3 @@ def parseOutBlastXml(prefix, test=False):
                         #print(f"\t\t\t-{accNumber}: ({header}, {score}, {hsp.query[:6]}, {hsp.sbjct[:6]}, ...)")
     return [hit for key, hit in outBlastDict.items()]
 
-
-
-###################################################################
-##            TEST             TEST            TEST              ##
-###################################################################
-#"""
-# /home/vincentwilde/Documents/ViralOceanView/
-BASE_DIR = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
-# ViralOceanView/dataBase_local/
-DATABASE = path.join(BASE_DIR,'ViralOceanView','file'"dataBase_local")  
-# ViralOceanView/data_test/
-DATATEST = path.join(BASE_DIR, "data_test") 
-#ViralOceanView/ViralOceanView/OceanFinder/file/out/
-DATAOUT = path.join(BASE_DIR,'ViralOceanView','file','OceanFinder','out')  
-#"""
-
-#testpath="/home/vincentwilde/Documents/ViralOceanView/ViralOceanView/ViralOceanView/file/dataBase_local/"
-#CreateDataBase(testpath)
-
-# CheckDataBaseIntegrity()
-
-# BlastIt
-#query = path.join(DATAOUT, 'query.fasta')
-#res = BlastIt(query)
-
-
-#parseOutBlastXml()
-#dico = parseOutBlastXml(test=True)
-#print(dico)
-"""
-for key, item in dico.items():
-    print(f"{key}:")
-    if isinstance(item, dict):
-        #print(f"\t{item}:")
-        for sub_key, sub_item in item.items():
-            print(f"\t\t'{sub_key}': {sub_item}")
-    else:
-        print(f"\t{item}")
-"""
