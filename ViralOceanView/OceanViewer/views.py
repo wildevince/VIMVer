@@ -48,7 +48,7 @@ class viewer(TemplateView):
                 context['refseq'] =  refseq.used_name
                 context['inputseq'] =  inputSeq.used_name
                 return render(request, viewer.template_name, context)
-
+                
         return render(request, viewer.template_name, context) 
         
 
@@ -63,10 +63,13 @@ class viewer(TemplateView):
         hit = OutBlast.objects.filter(job=job, accession=accession)
         if not hit:
             return (False, "OutBlast : hit not found")
-        pick_id:int 
-        inputSequence = hit['hsp_qseq']
-        my_refSeq_sequence = hit['hsp_hseq']
-        inputName = hit['name']
+        elif len(hit)>1 :
+            return (False, "Queryset: lacking specificity")
+        hit = hit[0]
+        pick_id = hit.id
+        inputSequence = str(hit.hsp_qseq)
+        my_refSeq_sequence = str(hit.hsp_hseq)
+        inputName = str(hit.name)
 
         # refSeq
         my_refSeq_name = my_refseq['name'] +':'+ my_refseq['header'].split(':')[1]
@@ -75,7 +78,7 @@ class viewer(TemplateView):
         length_original = findall(":(\d+)_", my_refseq['header'])[0]
         length_outBlast = len(my_refSeq_sequence)
         if length_original != length_outBlast:
-            resMuscle = complete(accNumber= accession)
+            resMuscle = complete(accNumber= accession, jobKey= jobKey)
             inputSequence = str(resMuscle['hsp_qseq'])
             my_refSeq_sequence = str(resMuscle['hsp_hseq'])
         ##
@@ -118,8 +121,8 @@ class viewer(TemplateView):
         pickBlast.hseq_transl = my_refSeq_translate
         pickBlast.hsp_qseq = inputSequence
         pickBlast.qseq_transl = my_inputseq_translate
-        pickBlast.save(['hsp_hseq', 'hseq_transl', 'hsp_qseq', 'qseq_transl'])
-
+        pickBlast.save()
+        
         # InputFinder.objects.all().delete()
         # preparing alignemnt
         if not Sequence.objects.filter(job=job):

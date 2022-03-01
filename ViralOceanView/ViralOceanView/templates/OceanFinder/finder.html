@@ -14,7 +14,7 @@
 <div><p><a href="https://pangolin.cog-uk.io/">get lineage on Pangolin</a></p><div>
 
 {% if jobKey %}
-    <div class='message'>We have found {{ outBlastList|Len }} reference(s) on Wuhan1.</div>
+    <div class='message'>We have found {{ outBlastList|Len }} reference(s) on Wuhan1. (Job: {{ jobKey }}) </div>
         {% if outBlastList %}
             <div id='outBlastList' class='table'>
                 {% for hit in outBlastList %}

@@ -45,7 +45,7 @@ class index(TemplateView):
                 context['input'] = InputForm()
                 #context['JobForm'] = JobForm()
                 return render(request, self.template_name, context)
-
+        
         return index.get(index, request)
         
 
@@ -74,15 +74,15 @@ class index(TemplateView):
         d, H = [ int(time_val) for time_val in date.split() ]
         for item in Job.objects.all():
             #print(item.date)
-            item_day, item_Hour = [ int(time_val) for time_val in item.date ]
+            item_day, item_Hour = [ int(time_val) for time_val in item.date.split() ]
             if d != item_day and item_Hour < H:
                     item.delete()
                     dirname = path.join(settings.MEDIA_ROOT,'OceanFinder','out')
                     for file in listdir(dirname):
                         if search('^'+jobKey, file):
                             remove(path.join(dirname,file))
-
-        Input(sequence=seq, header=head, name=n, job=job)
+        job.save()
+        Input(sequence=seq, header=head, name=n, job=job).save()
       
         # run Blast
         queryFile = query_to_file(inputSequence, jobKey)
@@ -133,7 +133,7 @@ class index(TemplateView):
                     definition= hit['definition'],
                     accession= hit['accession'],
                     identity= hit['identity'],
-                    score= hit['score'],
+                    score=  0 if hit['score']== '???' else hit['score'],
                     sbjct_length= hit['sbjct_length'],
                     hsp_hseq= hit['hsp_hseq'],
                     sbjct_start= hit['sbjct_start'],
@@ -142,7 +142,8 @@ class index(TemplateView):
                     query_start= hit['query_start'],
                     query_end= hit['query_end'],
                     qseq_transl= my_inputseq_translate
-                )
+                ).save()
+
         return True
 
 
@@ -152,13 +153,15 @@ class finder(TemplateView):
     def get(self, request):
         context = {'JobForm':JobForm()}
 
-        if 'jobKey' in request.GET:
-            jobKey = request.GET.get('jobKey')
+        if 'JobKeyForm' in request.GET:
+            jobKey = request.GET.get('JobKeyForm')
             if jobKey:
                 job = Job.objects.get(key=jobKey)
                 context['job'] = job
+                context['jobKey'] = job.key
                 context['outBlastList'] = OutBlast.objects.filter(job=job).values()
                 return render(request, self.template_name, context)
-        
-        return index.get(index, request)
+
+        context['message'] = "main error !"
+        return render(request, self.template_name, context)
         
