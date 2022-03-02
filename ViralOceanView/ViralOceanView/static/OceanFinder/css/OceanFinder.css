@@ -45,6 +45,13 @@
   padding: 2px;
 }
 
+.table-col[highlighted='False'] {
+  display: None;
+}
+.table-col[highlighted='True'] {
+  color: rgb(230, 10, 10);
+  font: bold;
+}
 
 [hidden='true'] {
   display: none;

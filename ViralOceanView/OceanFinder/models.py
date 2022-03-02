@@ -1,5 +1,7 @@
 from django.db import models
 
+from .tests import DefaultFastaSeq
+
 
 # Create your models here.
 
@@ -21,8 +23,8 @@ class Input(models.Model):
     #job = models.CharField(max_length=6)  #FK Job
 
     sequence = models.TextField(
-        verbose_name="input fasta sequence",
-        default= ">input seq test\nATGGGG---",
+        verbose_name="input nucl fasta sequence",
+        default=DefaultFastaSeq,
         blank=False)
     header = models.TextField()
     name = models.CharField(max_length=25)

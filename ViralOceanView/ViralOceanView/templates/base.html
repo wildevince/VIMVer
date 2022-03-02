@@ -37,7 +37,6 @@
   {% if JobForm %}
     <div class='JobForm'> 
         <form action="{% url 'finder' %}" method="get" enctype="multipart/form-data">
-            csrf_token
             {{ JobForm.as_p }}
             <input name='job' type='submit' value='Load Job'>
         </form>
