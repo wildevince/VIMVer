@@ -51,8 +51,7 @@
 }
 
 .table-col[identity="100.00%"] {
-  color: rgb(40, 40, 50);
-  font: normal;
+  display: None;
 }
 
 [hidden="true"] {
