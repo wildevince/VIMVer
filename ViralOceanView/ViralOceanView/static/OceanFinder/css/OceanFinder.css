@@ -1,5 +1,5 @@
-.hit{
-  padding: 10px
+.hit {
+  padding: 10px;
 }
 
 .table {
@@ -13,14 +13,14 @@
   width: 100%;
   color: black;
   background-color: rgb(190, 190, 190);
-  POSITION: relative;
+  position: relative;
 }
 
-.table-header{
+.table-header {
   display: inline-flex;
 }
 
-.table-header form{
+.table-header form {
   display: flex;
   position: absolute;
   left: 90%;
@@ -28,7 +28,7 @@
   top: 50%;
 }
 
-.table-row{
+.table-row {
   display: table-row;
   padding-bottom: 10px;
   width: fit-content;
@@ -36,23 +36,25 @@
   background-color: rgb(180, 180, 180);
 }
 
-.table-col{
+.table-col {
   display: inline-block;
   padding-right: 20px;
 }
 
-.table div{
+.table div {
   padding: 2px;
 }
 
-.table-col[highlighted='False'] {
-  display: None;
-}
-.table-col[highlighted='True'] {
+.table-col[identity] {
   color: rgb(230, 10, 10);
   font: bold;
 }
 
-[hidden='true'] {
+.table-col[identity="100.00%"] {
+  color: rgb(40, 40, 50);
+  font: normal;
+}
+
+[hidden="true"] {
   display: none;
 }
