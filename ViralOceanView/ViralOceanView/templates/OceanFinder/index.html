@@ -11,7 +11,7 @@
     </div>
 
     {% if jobKey %}
-    <div id='jobKey'>
+    <div class='last' id='jobKey'>
         <p>{{ jobKey }}</p>
         <form action="{% url 'finder' %}" method="get" enctype="multipart/form-data">
             <button type='submit' value="{{ jobKey }}" name='JobKeyForm'>{{ jobKey }}</button>

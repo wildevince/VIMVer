@@ -38,13 +38,14 @@
     <div class='JobForm'> 
         <form action="{% url 'finder' %}" method="get" enctype="multipart/form-data">
             {{ JobForm.as_p }}
-            <input name='job' type='submit' value='Load Job'>
+            <input name='job' type='submit' value='Load job'>
         </form>
   {% endif %}
 
   <section id="content">
     {% block content %}{% endblock %}
     </section>
+
 
 
 <footer>&copy; Viral Instant Mutation Viewer</footer>

@@ -158,6 +158,10 @@ a {
   background: grey;
 }
 
+.last {
+  margin-bottom: 3em;
+}
+
 footer {
   padding: 5px;
   position: fixed;

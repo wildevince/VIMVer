@@ -45,8 +45,8 @@
         {% endif %}
     </div>
     <div class=''>
-        <p><a href={% url 'export' "outfile.nucl.fasta" %}>download all nucleotid sequences only</a></p>
-        <p><a href={% url 'export' "outfile.prot.fasta" %}>download all protein sequences only</a></p>
+        <p><a href={% url 'export' outfile_nucl_fasta %}>download all nucleotid sequences only</a></p>
+        <p class='last'><a href={% url 'export' outfile_prot_fasta %}>download all protein sequences only</a></p>
     </div>
 {% endif  %}
 {% endblock %}

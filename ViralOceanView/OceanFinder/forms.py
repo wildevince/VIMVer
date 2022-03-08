@@ -18,7 +18,3 @@ class JobForm(forms.ModelForm):
     class Meta:
         model  = Job
         fields = ['key']
-
-
-class JobKeyForm(forms.Form):
-    key = forms.CharField(max_length=6)

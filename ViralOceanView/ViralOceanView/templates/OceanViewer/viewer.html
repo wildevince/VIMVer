@@ -64,9 +64,8 @@
             {% endfor %}
         </div>
     
-    <br/><a href="/delete_all/">Reset all</a><br/>
     <div class='forms'>
-        <p><a href={% url 'export' "outfile.aligned.fasta" %}>download sequences</a></p>
+        <p class='last'><a href={% url 'export' outfile_aligned_fasta %}>download sequences</a></p>
         </div>
     
     {% endif %}

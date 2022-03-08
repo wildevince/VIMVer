@@ -151,16 +151,21 @@ class finder(TemplateView):
     template_name = path.join("OceanFinder","finder.html")
         
     def get(self, request):
-        context = {'JobForm':JobForm()}
+        jobKey = None
+        in_forms = ['key', 'JobKeyForm']
+        for in_form in in_forms:
+            if in_form in request.GET:
+                jobKey = request.GET.get(in_form)
 
-        if 'JobKeyForm' in request.GET:
-            jobKey = request.GET.get('JobKeyForm')
-            if jobKey:
-                job = Job.objects.get(key=jobKey)
-                context['job'] = job
-                context['jobKey'] = job.key
-                context['outBlastList'] = OutBlast.objects.filter(job=job).values()
-                return render(request, self.template_name, context)
+        context = {'JobForm':JobForm()}
+        if jobKey:
+            job = Job.objects.get(key=jobKey)
+            context['job'] = job
+            context['jobKey'] = job.key
+            context['outBlastList'] = OutBlast.objects.filter(job=job).values()
+            context['outfile_nucl_fasta'] = jobKey+"_outfile.nucl.fasta"
+            context['outfile_prot_fasta'] = jobKey+"_outfile.prot.fasta"
+            return render(request, self.template_name, context)
 
         context['message'] = "main error !"
         return render(request, self.template_name, context)

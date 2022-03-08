@@ -47,6 +47,7 @@ class viewer(TemplateView):
                 context['seq_array'] = seq_array
                 context['refseq'] =  refseq.used_name
                 context['inputseq'] =  inputSeq.used_name
+                context['outfile_aligned_fasta'] = jobKey+"_outfile.aligned.fasta"
                 return render(request, viewer.template_name, context)
                 
         return render(request, viewer.template_name, context) 
