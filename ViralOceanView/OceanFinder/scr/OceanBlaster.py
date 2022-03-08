@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from math import trunc
+from multiprocessing.connection import wait
 from os import path, getcwd, listdir
 from re import findall
 from time import sleep
@@ -190,7 +191,15 @@ def complete(accNumber:int, jobKey:str):
         
         doBashline(MuscleCommandline('muscle', input=inPath, out=outPath))
         sleep(2)
-        
+
+        wait_turn = 0
+        while (not path.exists(outPath)) and wait_turn<10:
+            wait_turn += 1
+            print(f"waiting for muscle: {wait_turn} seconds ")
+            sleep(1)
+        if not path.exists(outPath):
+            return False
+                
         with open(outPath) as handle:
             for record in SeqIO.parse(handle, 'fasta'):
                 if record.id == 'query':
