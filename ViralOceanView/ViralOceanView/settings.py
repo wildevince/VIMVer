@@ -31,7 +31,7 @@ DEBUG = True
 # 'localhost', '127.0.0.1'
 # 'VM', '10.1.2.200'
 # 'VM', '0.0.0.0:8000'
-ALLOWED_HOSTS = ['127.0.0.1', '10.1.2.200', '139.124.83.212', 'https://vimver.afmb.univ-mrs.fr:8000/'] 
+ALLOWED_HOSTS = ['127.0.0.1', '10.1.2.200', '139.124.83.212', 'vimver.afmb.univ-mrs.fr'] 
 
 # Application definition
 
