@@ -14,7 +14,7 @@ def protAsTable(sequence:str, n:int):
         if residu == '*':
             res += " mismatch "
         if residu != '_':
-            res += f"  data-position={i+n} "
+            res += f"  data-position={i+n} title={i+n} "
         res += f">{residu}</td>"
     return mark_safe(res)
 
@@ -32,6 +32,6 @@ def nuclAsTable(sequence:str, n:int):
         if residu == '*':
             res += " mismatch "
         if residu != '_':
-            res += f" data-position={pos+1} "
+            res += f" data-position={pos+1} title={pos+1} "
         res += f">{residu}</td>"
     return mark_safe(res)

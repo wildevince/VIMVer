@@ -68,19 +68,22 @@ class index(TemplateView):
 
         date = datetime.now().strftime('%d %H')
         job = Job(key= jobKey, date=date)
-        #job.save()
         ### job: auto_clean
         date_laps = 24 #hours
         d, H = [ int(time_val) for time_val in date.split() ]
+        H = d*24 +H
         for item in Job.objects.all():
             #print(item.date)
             item_day, item_Hour = [ int(time_val) for time_val in item.date.split() ]
-            if d != item_day and item_Hour < H:
-                    item.delete()
-                    dirname = path.join(settings.MEDIA_ROOT,'OceanFinder','out')
-                    for file in listdir(dirname):
-                        if search('^'+jobKey, file):
-                            remove(path.join(dirname,file))
+            item_Hour = item_day*24 +item_Hour
+            if item_Hour > H:
+                key = item.key
+                item.delete()
+                dirname = path.join(settings.MEDIA_ROOT,'OceanFinder','out')
+                outfiles = [f for f in listdir(dirname) if key == f[:6]]
+                for f in outfiles:
+                    input(f"removing: {path.join(dirname,f)}")
+                    remove(path.join(dirname,f))
         job.save()
         Input(sequence=seq, header=head, name=n, job=job).save()
       

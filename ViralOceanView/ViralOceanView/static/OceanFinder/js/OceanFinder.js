@@ -10,5 +10,7 @@ $(document).ready(function() {
         $(this).attr('highlighted', ($(this).attr('identity')!='100.00%')? 'True' : 'False') ;
     } );
 
-
+    $(function() {
+    $("div.p-row").tooltip({track:true});
+    });
 })

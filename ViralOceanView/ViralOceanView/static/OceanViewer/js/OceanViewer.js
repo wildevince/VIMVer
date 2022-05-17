@@ -35,4 +35,10 @@ $(document).ready(function() {
 
 	});
 	
+	$(function() {
+		$("div.p-row").tooltip({track:true});
+		});
+
+	//$("#prot_display tr.refSeq td").
+
 })

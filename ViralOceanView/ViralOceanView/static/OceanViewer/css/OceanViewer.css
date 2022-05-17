@@ -100,43 +100,48 @@ div.forms form{
   color: rgb(230, 230, 230)
 }
 
-
+table.sequence td {
+  padding: 0px; 
+}
 
 [data-residu='-'] {color: gray;}
 [data-residu='*'] {background: rgb(220, 220, 220); color: gray; }
 [data-residu='~'] {color: gray;}
 [data-residu='_'] {color: rgb(40, 40, 50);}
 
+
+
 div#prot_display [data-residu='A'] {color: rgb(230, 230, 230);}
-div#prot_display [data-residu='G'] {color: rgb(230, 230, 230);}
 div#prot_display [data-residu='I'] {color: rgb(230, 230, 230);}
 div#prot_display [data-residu='L'] {color: rgb(230, 230, 230);}
 div#prot_display [data-residu='P'] {color: rgb(230, 230, 230);}
 div#prot_display [data-residu='V'] {color: rgb(230, 230, 230);}
+div#prot_display [data-residu='M'] {color: rgb(230, 230, 230);}
 
 div#nucl_display [data-residu='A'] {color: rgb(230, 10, 10);}
-div#prot_display [data-residu='R'] {color: rgb(230, 10, 10);}
-div#prot_display [data-residu='H'] {color: rgb(230, 10, 10);}
-div#prot_display [data-residu='K'] {color: rgb(230, 10, 10);}
+div#prot_display [data-residu='D'] {color: rgb(230, 10, 10);}
+div#prot_display [data-residu='E'] {color: rgb(230, 10, 10);}
 
 div#nucl_display [data-residu='C'] {color: rgb(10, 230, 10);}
 div#prot_display [data-residu='S'] {color: rgb(10, 230, 10);}
 div#prot_display [data-residu='T'] {color: rgb(10, 230, 10);}
+div#prot_display [data-residu='G'] {color: rgb(10, 230, 10);}
+div#prot_display [data-residu='C'] {color: rgb(10, 230, 10);}
 
-div#nucl_display [data-residu='T'] {color: rgb(0, 100, 255);}
-div#prot_display [data-residu='F'] {color: rgb(0, 100, 255);}
-div#prot_display [data-residu='W'] {color: rgb(0, 100, 255);}
-div#prot_display [data-residu='Y'] {color: rgb(0, 100, 255);}
+
+div#nucl_display [data-residu='T'] {color: rgb(0, 150, 250);}
+div#prot_display [data-residu='R'] {color: rgb(0, 150, 250);}
+div#prot_display [data-residu='H'] {color: rgb(0, 150, 250);}
+div#prot_display [data-residu='K'] {color: rgb(0, 150, 250);}
 
 div#nucl_display [data-residu='G'] {color: rgb(250, 220, 0);}
-div#prot_display [data-residu='N'] {color: rgb(250, 220, 0);}
-div#prot_display [data-residu='Q'] {color: rgb(250, 220, 0);}
+div#prot_display [data-residu='F'] {color: rgb(250, 220, 190);}
+div#prot_display [data-residu='W'] {color: rgb(250, 220, 190);}
+div#prot_display [data-residu='Y'] {color: rgb(250, 220, 190);}
 
-div#prot_display [data-residu='D'] {color: purple;}
-div#prot_display [data-residu='E'] {color: purple;}
+div#prot_display [data-residu='N'] {color: rgb(210, 20, 230);}
+div#prot_display [data-residu='Q'] {color: rgb(210, 20, 230);}
 
-div#prot_display [data-residu='C'] {color: pink;}
-div#prot_display [data-residu='M'] {color: pink;}
 
 div#nucl_display [data-residu='N'] {color: gray;}
 div#prot_display [data-residu='X'] {color: gray;}
