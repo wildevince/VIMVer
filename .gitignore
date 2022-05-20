@@ -1,3 +1,4 @@
 *.pyc
 ViralOceanView/ViralOceanView/file/OceanFinder/*
 ViralOceanView/db.sqlite3
+*.ipynb

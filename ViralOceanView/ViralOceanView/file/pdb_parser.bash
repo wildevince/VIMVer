@@ -1,0 +1,1 @@
+grep -E "^(HELIX|SHEET|SEQRES)" $1 > ${1/.pdb/.csv} 
