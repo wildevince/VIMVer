@@ -1,4 +1,3 @@
-
 from os import path
 from re import findall, search
 
@@ -102,7 +101,7 @@ class viewer(TemplateView):
         score += 3 if res else -1
         if score >= 5 :
             j = inputSequence[:len(inputSequence)//3].find("A-C") +1
-            inputSequence_corrected = inputSequence[:j] + 'A' + inputSequence[j+1:] 
+            inputSequence_corrected = inputSequence[:j] + 'C' + inputSequence[j+1:] 
             my_inputseq_translate = my_translate(inputSequence_corrected)
 
         # export

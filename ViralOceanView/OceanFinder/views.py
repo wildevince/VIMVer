@@ -123,7 +123,7 @@ class index(TemplateView):
                 my_inputSequence = str(hit['hsp_qseq'])
                 if search("TTTAAA[C-]CGGG", my_inputSequence[:len(my_inputSequence)//3]):
                     j = my_inputSequence[:len(my_inputSequence)//3].find('A-C') +1
-                    inputSequence_corrected = my_inputSequence[:j] + 'A' + my_inputSequence[j+1:]
+                    inputSequence_corrected = my_inputSequence[:j] + 'C' + my_inputSequence[j+1:]
                     my_inputseq_translate = my_translate(inputSequence_corrected)
                 else:
                     my_inputseq_translate = my_translate(my_inputSequence)
