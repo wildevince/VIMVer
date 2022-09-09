@@ -1,6 +1,6 @@
 # Instant Variant
 
-This Readme file is intended for developpers or for any other users.
+This Readme file is intended for developers or for any other users.
 **Requirements**, **Installation** and **Usage** are described below.
 
 ## About ##
@@ -11,7 +11,7 @@ The goal of this project is to propose a bioinformatics tool for structural prot
 
 ## Requirements
 
-We have implemented this project in **python 3.6+**, along with three python packages :
+We have implemented this project in **python 3.8+**, along with three python packages :
 
 * [Python Django framework](https://www.djangoproject.com/)
 * [Biopython](https://www.djangoproject.com/)
@@ -20,14 +20,14 @@ We have implemented this project in **python 3.6+**, along with three python pac
 
 ## Installation
 
-The project is still in developper's mode. That means that it will be running in a local server manage by Django.
+The project is still in developer mode. That means that it will be running on a local server managed by Django.
 
-1. The code is available via the following github repository : https://github.com/wildevince/ViralOceanView.git.
+1. The code is available via the following github repository: https://github.com/wildevince/ViralOceanView.git.
 ```
 git clone https://github.com/wildevince/ViralOceanView.git
 ```
 
-2. If needed to verify your python version and to install the required packages.
+2. If needed to verify your python version and install the required packages.
 
 #### Verify your python version ####
 ```
@@ -49,7 +49,7 @@ python3 -m  django --version
 
 ## Usage
 
-To run the web-service in the dedicaded local-server by django.
+To run the web-service in the dedicated local-server by django.
 ```
 python3 ./runInstantVariant.sh
 ```
