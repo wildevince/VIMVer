@@ -30,7 +30,7 @@ DEBUG = True
 
 # 'localhost', '127.0.0.1'
 # 'VM', '10.1.2.200'
-ALLOWED_HOSTS = ['127.0.0.1', '10.1.2.200', 'vimver.afmb.univ-mrs.fr']   
+ALLOWED_HOSTS = ['10.1.2.200', 'vimver.afmb.univ-mrs.fr']   
 #'139.124.83.212',
 
 # Application definition
@@ -43,18 +43,19 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'ViralOceanView.urls'
@@ -130,8 +131,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-#STATIC_ROOT = path.join(path.dirname(path.abspath(__file__)), 'static')
-STATICFILES_DIRS = (path.join(BASE_DIR, 'ViralOceanView', 'static'),)
+STATIC_ROOT = path.join(BASE_DIR,'static')
+#STATICFILES_DIRS = (path.join(BASE_DIR, 'ViralOceanView', 'static'),)
 
 # django debug toolbar
 INTERNAL_IPS = ['127.0.0.1']

@@ -6,7 +6,7 @@ from OceanFinder.models import Job
 
 # Create your models here.
 
-fs = FileSystemStorage(location='/OceanViewer/files')
+# fs = FileSystemStorage(location='/OceanViewer/files')
 
 
 class Sequence(models.Model):

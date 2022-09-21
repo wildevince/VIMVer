@@ -1,4 +1,0 @@
-django
-Bio
-Pillow
-whitenoise

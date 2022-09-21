@@ -1,0 +1,5 @@
+django
+Bio
+Pillow
+whitenoise
+numpy
