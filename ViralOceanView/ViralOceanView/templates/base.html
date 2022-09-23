@@ -24,15 +24,24 @@
     {% endblock %}
     </nav>
   
+  
   <div class='subTitle'>
     {% load static %}
     <h1>Viral Instant Mutation Viewer : VIMVer</h1>
     <img id="instantVariantLogo" src="{% static 'OceanViewer/img/instantVariantLogo.png' %}" width='128' height='128'>
-  </div>
-   
+    </div>
+  <div class='definition'>
+    <p>This website is free and open to all users and there is no login requirement.</p>
+    <p>Input: nucleotide sequence between 30b and a full genome of SARS-CoV2.</p>
+    <p>Output: positioning and type of each mutation for each of 26 SARS-CoV2 proteins.</p>
+    <p hidden>Citation: wip</p>
+    <p hidden>Open source: <a href="https://github.com/wildevince/VIMVer">https://github.com/wildevince/VIMVer</a></p>
+    </div>
+  
+
   {% if message %}
     <div class='message'><p>{{ message }}</p></div>
-  {% endif %}
+    {% endif %}
 
   {% if JobForm %}
     <div class='JobForm'> 
@@ -40,10 +49,48 @@
             {{ JobForm.as_p }}
             <input name='job' type='submit' value='Load job'>
         </form>
-  {% endif %}
+        </div>
+    {% endif %}
 
   <section id="content">
     {% block content %}{% endblock %}
+    </section>
+
+
+  <section id="info">
+   <div id='infobox'>
+      <div class="infoButtons" title='Click to expand' hidden>
+        <button type="button" id="infobox-help" >Help</button>
+        <button type="button" id="infobox-project" >Project</button>
+        <button type="button" id="infobox-contact" >Contact</button>
+        </div>
+      <div class='infoContents'>
+        <div id='infocontent-help'>
+          <h1>Help</h1>
+          <ol type='1'>
+            <li>Paste your SARS-CoV2 related genomic sequence in the input box. Then press the 'Blast it' button underneath.</li>
+            <img id="help_img_1" src="{% static 'OceanViewer/img/help_1.png' %}">
+            <li>Press the newly appeared button to jump to the result.</li>
+            <img id="help_img_2" src="{% static 'OceanViewer/img/help_2.png' %}">
+            <li>Press the 'pick' button to acces the alignements for the corresponding line in the table.</li>
+            </ol>
+          </div>
+        <div id='infocontent-project' hidden=''>
+          <h1>Viral Instant Mutation Viewer (VIMVer) : a tool to speed up the identification and analysis of new SARS-CoV2 emerging variant</h1>
+          <p class="author">Wilde Vincent<sup>1</sup>, Canard Bruno <sup>1,2</sup> and Ferron François <sup>1,2,*</sup></p>
+          <p class="author-details"><sup>1</sup> Aix-Marseille Université and Laboratoire Architecture et Fonction des Macromolécules Biologiques (AFMB), CNRS – UMR-7257,  13288 Marseille, France.</p>
+          <p class="author-details"><sup>2</sup> European Virus Bioinformatics Center, Leutragraben 1, 07743 Jena, Germany.</p>
+          <p class="author-details"><sup>*</sup> Tel: +33 (0)491828628 ; Email: <a href="mailto:francois.ferron@univ-amu.fr">francois.ferron@univ-amu.fr</a>.</p>
+          <p class="abstract">The severe acute respiratory syndrome coronavirus-2 (SARS-CoV-2), responsible for the COVID-19 pandemic, has become one of the most studied viruses since its emergence. The divergence of these variants from the original strain has a real impact on the efficiency of the vaccination and therapeutic options. In this context, our main goal is to understand the differences behind the mutations observed simultaneously in the proteome and the genome. To act accordingly, we developed an user-friendly web-service software (Viral Instant Mutation Viewer or VIMVer) which allows a fast identification of new mutations and displays them in both the nucleotide and protein sequences in comparison to a reference sequence (wuhan-1). Given a SARS-CoV-2 nucleotide sequence (as a newly sequenced genome), our software will instantly extract, analyze and visualize mutations (silent or not) on the genome and the proteome with the proper numbering and positioning. Furthermore, the lineage or the relative position to known lineage of the variant of interest is available on the link to Phylogenetic Assignment of Named Global Outbreak LINeages (Pangolin COVID-19). We believe this tool will help many in their daily process to analyze their data. The workflow presented here is available through a web service (llinkto:VIMIVer.web). The source code is released under public license and can be adapted for further development and other viruses such as influenza virus.<p>
+          <p class="publication">unknown</p>
+          <p class="license">unknown</p>
+          </div>
+        <div id='infocontent-contact'>
+          <h1>Contact us</h1>
+          <p class="author">Vincent Wilde, PhD student :<a href="mailto:vincent.wilde@univ-amu.fr">vincent.wilde@univ-amu.fr</a></p>
+          </div>
+        </div>
+      </div>
     </section>
 
 

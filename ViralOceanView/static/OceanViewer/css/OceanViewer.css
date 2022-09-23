@@ -24,6 +24,71 @@ body {
   background-color: rgb(200,200,200);
 }
 
+
+
+#infobox {
+  /*
+  position:fixed;
+  right:0%;
+  top: 50%;
+  text-align: right;
+  */
+  
+  position: relative;
+  color: black;
+  margin-top: 10%;
+}
+
+/*
+#infobox .infoButtons {
+  height: fit-content;
+  position: relative;
+  display: none;
+  width: min-content;
+}
+
+#infobox .infoButtons button {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  border-top-left-radius: 1em;
+  border-bottom-left-radius: 1em;
+  background-color: rgb(200,200,200);
+  padding-left: 2em; 
+  margin-bottom: 1em;
+  width: 5em;
+}
+*/
+
+.infoContents {
+  position: relative;
+  width: 100%;
+}
+
+.infoContents div {
+  height: fit-content;
+  background-color: rgb(200,200,200);
+  display: inline-block;
+  width:40%;
+  margin:2em;
+}
+
+#infocontent-project {
+  display: none;
+}
+
+#infocontent-help li {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+#infocontent-help img {
+  position: relative;
+  display: block;
+  width: 90%;
+}
+
+
 div.subTitle {
   position: relative;
   display: inline-block;
@@ -33,6 +98,10 @@ div.subTitle img {
   position: fixed;
   top: 1em;
   right: 1em;
+}
+
+div.definition {
+  margin-bottom: 4em;
 }
 
 
@@ -97,7 +166,12 @@ table {
 
 div.forms form{
   background: rgb(40, 40, 40);
-  color: rgb(230, 230, 230)
+  color: rgb(230, 230, 230);
+}
+
+textarea#id_sequence {
+  width: 55% ;
+  height: 25%;
 }
 
 table.sequence td {
@@ -167,12 +241,21 @@ a {
   margin-bottom: 3em;
 }
 
+[hidden] {
+  display: none;
+}
+
+body section:last-child {
+  margin-bottom: 5em;
+}
+
 footer {
-  padding: 5px;
+  margin: 2px;
+  padding-right: 2px;
   position: fixed;
   bottom: 0;
-  left: 0;
-  width:100%;
-  background-color: rgb(100, 100, 100);
+  text-align: right;
+  right: 1px;
+  height: fit-content;
   clear: both;
 }
