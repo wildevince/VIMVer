@@ -1,13 +1,11 @@
-# Instant Variant
+# Viral Instrant Mutation Viewer
 
-This Readme file is intended for developers or for any other users.
-**Requirements**, **Installation** and **Usage** are described below.
 
 ## About ##
 
 Instant Variant is a web-service bioinformatics software.
-The goal of this project is to propose a bioinformatics tool for structural protein studies.
-
+The goal of this project is to propose a bioinformatics tool for structural protein studies. 
+Under [CeCCIL](http://www.cecill.info/index.en.html) license.
 
 ## Requirements
 
@@ -16,18 +14,18 @@ We have implemented this project in **python 3.8+**, along with three python pac
 * [Python Django framework](https://www.djangoproject.com/)
 * [Biopython](https://www.djangoproject.com/)
 * [logomaker](https://logomaker.readthedocs.io/en/latest/)
-
+* [numpy](https://numpy.org/)
 
 ## Installation
-
-The project is still in developer mode. That means that it will be running on a local server managed by Django.
 
 1. The code is available via the following github repository: https://github.com/wildevince/ViralOceanView.git.
 ```
 git clone https://github.com/wildevince/ViralOceanView.git
 ```
 
-2. If needed to verify your python version and install the required packages.
+2. We recommande to install the project with a python virtual environment.
+
+3. If needed to verify your python version and install the required packages.
 
 #### Verify your python version ####
 ```
@@ -36,10 +34,7 @@ python3 --version
 
 #### install the required packages ####
 ```
-python3 -m pip install django
-python3 -m pip install Bio
-python3 -m pip install Pillow
-python3 -m pip install whitenoise
+python3 -m pip install -r requirements.txt
 ```
 
 #### Verify your django version ####
@@ -49,26 +44,21 @@ python3 -m  django --version
 
 ## Usage
 
-To run the web-service in the dedicated local-server by django.
-```
-python3 ./runInstantVariant.sh
-```
+The project is deployed with apache2 service (via this link https://vimver.afmb.univ-mrs.fr/).
 
-###
+1. Paste your SARS-CoV2 related genomic sequence in the input box. Then press the 'Blast it' button underneath.
+
+<img src="/ViralOceanView/static/OceanViewer/img/help_1.png" style="width: 80%">
+
+2. Press the newly appeared button to jump to the result.
+
+<img src="/ViralOceanView/static/OceanViewer/img/help_2.png" style="width: 80%">
+
+3. Press the 'pick' button to acces the alignements for the corresponding line in the table.
 
 
 ### Deployment
-work in progress
-
-
-### Specifications
-work in progress
-Precision on certain functionalities.
-
-
-### Documentation
-
-The documentation, in `.html` format, is in the `ViralOceanView/docs/` project repository.
+We used a apache2 server for the deployment. Please check Django documentation.
 
 
 ## Citation

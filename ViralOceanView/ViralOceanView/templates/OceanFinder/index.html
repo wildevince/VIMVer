@@ -5,6 +5,12 @@
     <div class="forms input">
         <form action="{% url 'index' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            <p>Warning: please take these few lines to account for your submissions, they may change while the project evolves.</p>
+            <ul>
+                <li>nucleotide sequence only</li>
+                <li>in fasta format (starting with : ">example-sample...")</li>
+                <li>length between 30 nucleotides and a full genome</li>
+            </ul>
             {{ input.as_p }}
             <input name='input' type="submit" value="Blast it"/>
         </form>
