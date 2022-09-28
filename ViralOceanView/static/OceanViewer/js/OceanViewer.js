@@ -39,31 +39,19 @@ $(document).ready(function() {
 		$("div.p-row").tooltip({track:true});
 		});
 
-	/*
-	$("#infobox-help").each.click(function() {
-		alert("infobox-help");
-	});
-	*/
 
-	//$("#prot_display tr.refSeq td").
-
-	/*
-	function turn_InfoContent_off() {
-		$(".infoContents div").all().Attr("hidden");
-		};
+	
 	$("#infobox-help").click(function() {
-		turn_InfoContent_off();
-		$("#infocontent-help").removeAttr("hidden");
+		$(".infoPanel").Attr("hidden");
+		$("#infoPanel-help").removeAttr("hidden");
 	});
 	$("#infobox-project").click(function() {
-		turn_InfoContent_off();
-		$("#infocontent-project").removeAttr("hidden");
+		$(".infoPanel").Attr("hidden");
+		$("#infoPanel-project").removeAttr("hidden");
 	});
 	$("#infobox-contact").click(function() {
-		turn_InfoContent_off();
-		$("#infocontent-contact").removeAttr("hidden");
+		$(".infoPanel").Attr("hidden");
+		$("#infoPanel-contact").removeAttr("hidden");
 	});
-	*/
-	
 
 })

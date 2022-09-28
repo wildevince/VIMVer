@@ -20,7 +20,7 @@
                 {% for hit in outBlastList %}
                     <div class='p-row' accession={{ hit.accession }} jobKey={{ jobKey }}>
                         <div class='table-header'>
-                            <div>{{ hit.definition }}</div>
+                            <div>{{ hit.name }}</div>
                             <form action="{% url 'viewer' %}" method="get" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <button type='submit' value="{{ hit.accession }} {{ jobKey }}" name='pickBlastRef'>pick</button>

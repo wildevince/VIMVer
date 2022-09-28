@@ -82,5 +82,5 @@ class OutBlast(models.Model):
     hsp_qseq = models.TextField()  # inputSequence
     query_start = models.IntegerField()
     query_end = models.IntegerField()
-    qseq_transl = models.TextField()  # my_inputseq_translate
+    qseq_transl = models.TextField(null=True)  # my_inputseq_translate
 

@@ -297,7 +297,6 @@ def parseOutBlastXml(jobkey):
         for record in NCBIXML.parse(handler):  # iter
             for alignment in iter(record.alignments):
                 accNumber = alignment.accession
-                header = extractHeader(alignment.hit_def)
                 length = alignment.length
                 for hsp in iter(alignment.hsps):
                     pickme = False
@@ -308,6 +307,7 @@ def parseOutBlastXml(jobkey):
                         #identity = f"{float(hsp.identities)/float(length)*100}%"
                         identity = hsp.identities
                         score = hsp.score
+                        header = extractHeader(alignment.hit_def)
                         outBlastDict[accNumber] = {
                             'name': header, 'identity': identity, 'sbjct_length':length, 
                             'score':score, 'definition':alignment.hit_def, 'accession':accNumber,

@@ -54,6 +54,7 @@ from OceanFinder.scr.OceanFinder import my_translate
 class index(TemplateView):
     """ 1st page requests """
     template_name = path.join('OceanFinder', 'index.html')
+    creation_limiter = 2
 
     def get(self, request):
         context = {'input':InputForm(), 'JobForm':JobForm()}
@@ -97,6 +98,34 @@ class index(TemplateView):
         """
         #InputFinder.objects.all().delete()   #################
         #Sequence.objects.all().delete()      #################
+        def clean_old_jobs():
+            index.creation_limiter = 2
+            outPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out')
+            date = datetime.now().strftime('%d %H')
+            date = date.split()
+            #date = { 'day':data[0], 'hour':data[1] }
+            for job in Job.objects.all():
+                jobkey = job.key
+                job_day, job_hour = job.date.split()
+                time = 24 * (int(date[0])- int(job_day))
+                time += (int(date[1]) - int(job_hour))
+                #timeUp = ""
+                print(job.key, job.date)
+                if(time >= 1):  # 24 hours
+                    #timeUp = "*"
+                    print("deleting", job.key)
+                    job.delete()
+                    for file in listdir(outPath):
+                        if(path.basename(file).startswith(jobkey)):
+                            remove(file)
+
+                    ###############################
+                    ###############################
+                    
+
+            ### job: auto_clean
+            
+        
 
         inputSequence = str(inputSequenceForm.cleaned_data["sequence"])
         head = inputSequence.split('\n')[0]
@@ -105,23 +134,10 @@ class index(TemplateView):
 
         date = datetime.now().strftime('%d %H')
         job = Job(key= jobKey, date=date)
-        ### job: auto_clean
-        date_laps = 24 #hours
-        d, H = [ int(time_val) for time_val in date.split() ]
-        H = d*24 +H
-        for item in Job.objects.all():
-            #print(item.date)
-            item_day, item_Hour = [ int(time_val) for time_val in item.date.split() ]
-            item_Hour = item_day*24 +item_Hour
-            if item_Hour > H:
-                key = item.key
-                item.delete()
-                dirname = path.join(settings.MEDIA_ROOT,'OceanFinder','out')
-                outfiles = [f for f in listdir(dirname) if key == f[:6]]
-                for f in outfiles:
-                    input(f"removing: {path.join(dirname,f)}")
-                    remove(path.join(dirname,f))
+        index.creation_limiter -= 1
         job.save()
+        if(index.creation_limiter <= 0):  # auto-clean every creation_limiter Job created
+            clean_old_jobs()
         Input(sequence=seq, header=head, name=n, job=job).save()
       
         # run Blast
@@ -169,7 +185,7 @@ class index(TemplateView):
                 # OutBlast
                 OutBlast(
                     job= job,
-                    name= n,
+                    name= f"{n}_{hit['name']}",
                     definition= hit['definition'],
                     accession= hit['accession'],
                     identity= hit['identity'],
