@@ -110,13 +110,16 @@ class index(TemplateView):
                 time = 24 * (int(date[0])- int(job_day))
                 time += (int(date[1]) - int(job_hour))
                 #timeUp = ""
-                print(job.key, job.date)
+                #print(job.key, job.date)
                 if(time >= 1):  # 24 hours
                     #timeUp = "*"
-                    print("deleting", job.key)
+                    #print("-> deleting job:", job.key, job_day, job_hour, time)
                     job.delete()
+                    #print("\t-> removing related files:")
                     for file in listdir(outPath):
-                        if(path.basename(file).startswith(jobkey)):
+                        if(file.startswith(jobkey)):
+                            print("\t\t-> " + file)
+                            file = path.join(settings.MEDIA_ROOT,'OceanFinder','out',file)
                             remove(file)
 
                     ###############################
@@ -125,8 +128,6 @@ class index(TemplateView):
 
             ### job: auto_clean
             
-        
-
         inputSequence = str(inputSequenceForm.cleaned_data["sequence"])
         head = inputSequence.split('\n')[0]
         n = head[1:].split()[0]

@@ -102,7 +102,7 @@ def searchingRefSeq(
     Entrez.email = "oceanViewer@example.com"
     residu_type= str(residu_type)
     if not log :
-        log = open("~/Documents/OceanView/ViralOceanView/ViralOceanView/ViralOceanView/file/OceanFinder/log.txt",'w')
+        log = open(os.path.join(settings.MEDIA_ROOT,'OceanFinder',log.txt),'w')
         
 
     ## querries
@@ -246,7 +246,3 @@ def my_translate(sequence, indel=('-','.')):
     return trans
 
 
-###########################################################
-###########################################################
-
-#dictToFile(searchingRefSeq(), testpath="/home/vincentwilde/Documents/ViralOceanView/ViralOceanView/ViralOceanView/file/dataBase_local/")

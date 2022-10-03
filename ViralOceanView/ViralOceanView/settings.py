@@ -54,7 +54,7 @@ Temp_DIR = path.dirname(path.abspath(__file__))
 SECRET_KEY = config_data.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = config_data['ALLOWED_HOSTS']
 
