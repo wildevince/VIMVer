@@ -1,4 +1,4 @@
 *.pyc
 ViralOceanView/ViralOceanView/file/OceanFinder/*
-.runserver
-.debugserver
+.runserver.sh
+.debugserver.sh
