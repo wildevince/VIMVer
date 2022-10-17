@@ -10,3 +10,6 @@ sudo chown :www-data -fR ViralOceanView/static/
 
 echo "check apache2 server"
 sudo service apache2 restart
+
+echo "check crontab"
+crontab -l
