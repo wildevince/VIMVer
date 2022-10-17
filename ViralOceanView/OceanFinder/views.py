@@ -1,3 +1,38 @@
+"""
+Copyright. Vincent WILDE (26th September 2022)
+
+vincent.wilde@univ-amu.fr
+
+This software is a computer program whose purpose is to define genonic 
+and proteomic mutations between the user's query and the wuhan-1 refseq.
+
+This software is governed by the CeCILL license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms.
+"""
+
 from datetime import datetime
 from os import path, remove, listdir
 from re import search
@@ -17,7 +52,9 @@ from OceanFinder.scr.OceanFinder import my_translate
 
 
 class index(TemplateView):
+    """ 1st page requests """
     template_name = path.join('OceanFinder', 'index.html')
+    creation_limiter = 10
 
     def get(self, request):
         context = {'input':InputForm(), 'JobForm':JobForm()}
@@ -25,6 +62,7 @@ class index(TemplateView):
 
 
     def post(self, request):
+        """ user's sequence submission """
         query = InputForm(request.POST)
         context = {}
 
@@ -61,6 +99,24 @@ class index(TemplateView):
         #InputFinder.objects.all().delete()   #################
         #Sequence.objects.all().delete()      #################
 
+        def clean_old_jobs():
+            index.creation_limiter = 10
+            outPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out')
+            date = datetime.now().strftime('%d %H')
+            date = date.split()
+            for job in Job.objects.all():
+                jobkey = job.key
+                job_day, job_hour = job.date.split()
+                time = 24 * (int(date[0])- int(job_day))
+                time += (int(date[1]) - int(job_hour))
+                if(time >= 24):  # 24 hours
+                    job.delete()
+                    for file in listdir(outPath):
+                        if(file.startswith(jobkey)):
+                            print("\t\t-> " + file)
+                            file = path.join(settings.MEDIA_ROOT,'OceanFinder','out',file)
+                            remove(file)
+
         inputSequence = str(inputSequenceForm.cleaned_data["sequence"])
         head = inputSequence.split('\n')[0]
         n = head[1:].split()[0]
@@ -68,23 +124,11 @@ class index(TemplateView):
 
         date = datetime.now().strftime('%d %H')
         job = Job(key= jobKey, date=date)
-        ### job: auto_clean
-        date_laps = 24 #hours
-        d, H = [ int(time_val) for time_val in date.split() ]
-        H = d*24 +H
-        for item in Job.objects.all():
-            #print(item.date)
-            item_day, item_Hour = [ int(time_val) for time_val in item.date.split() ]
-            item_Hour = item_day*24 +item_Hour
-            if item_Hour > H:
-                key = item.key
-                item.delete()
-                dirname = path.join(settings.MEDIA_ROOT,'OceanFinder','out')
-                outfiles = [f for f in listdir(dirname) if key == f[:6]]
-                for f in outfiles:
-                    input(f"removing: {path.join(dirname,f)}")
-                    remove(path.join(dirname,f))
+        index.creation_limiter -= 1
         job.save()
+        if(index.creation_limiter <= 0):
+            clean_old_jobs()
+        
         Input(sequence=seq, header=head, name=n, job=job).save()
       
         # run Blast
@@ -92,10 +136,11 @@ class index(TemplateView):
         queryFilePath = path.join(settings.MEDIA_ROOT,'OceanFinder','out', queryFile)
         #job.queryFasta = path.join(settings.MEDIA_ROOT,'OceanFinder','out', queryFile)
         #job.save(['queryFasta'])
+        ### wait for max 10 seconds
         wait_turn = 0
         while (not path.exists(queryFilePath)) and wait_turn<10:
             wait_turn += 1
-            print(f"waited {wait_turn} seconds")
+            #print(f"waited {wait_turn} seconds")
             sleep(1)
         if not path.exists(queryFilePath):
             return False
@@ -104,10 +149,11 @@ class index(TemplateView):
         blastnPath = path.join(settings.MEDIA_ROOT,'OceanFinder','out', blastn[1])
         #job.outBlastXML = path.join(settings.MEDIA_ROOT,'OceanFinder','out', blastn[1])
         #job.save(['outBlastXML'])
+        ### wait for max 20 seconds
         wait_turn = 0
         while (not path.exists(blastnPath)) and wait_turn<20:
             wait_turn += 1
-            print(f"waited {wait_turn} seconds")
+            #print(f"waited {wait_turn} seconds")
             sleep(1)
         if not path.exists(blastnPath):
             return False
@@ -132,7 +178,7 @@ class index(TemplateView):
                 # OutBlast
                 OutBlast(
                     job= job,
-                    name= n,
+                    name= f"{n}_{hit['name']}",
                     definition= hit['definition'],
                     accession= hit['accession'],
                     identity= hit['identity'],
@@ -151,6 +197,7 @@ class index(TemplateView):
 
 
 class finder(TemplateView):
+    """ 2nd page: results form blast """
     template_name = path.join("OceanFinder","finder.html")
         
     def get(self, request):
