@@ -10,12 +10,12 @@ def protAsTable(sequence:str, n:int):
     res = ""
     n = int(n)
     for i,residu in enumerate(sequence):
-        res += f"<td data-residu='{residu}'"
+        res += f"<span data-residu='{residu}'"
         if residu == '*':
             res += " mismatch "
         if residu != '_':
             res += f"  data-position={i+n} title={i+n} "
-        res += f">{residu}</td>"
+        res += f">{residu}</span>"
     return mark_safe(res)
 
 @register.filter(is_safe=True)
@@ -28,10 +28,10 @@ def nuclAsTable(sequence:str, n:int):
             pos = i//k + n//k
         elif i==0:
             pos = n//k
-        res += f"<td data-residu='{residu}'"
+        res += f"<span data-residu='{residu}'"
         if residu == '*':
             res += " mismatch "
         if residu != '_':
             res += f" data-position={pos+1} title={pos+1} "
-        res += f">{residu}</td>"
+        res += f">{residu}</span>"
     return mark_safe(res)

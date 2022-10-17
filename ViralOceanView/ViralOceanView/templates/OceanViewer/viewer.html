@@ -9,32 +9,32 @@
 {% load OceanViewer_extras %}
 {% if seq_array %}
     <div class='header'>
-        <div><b>RefSeq :</b>{{refseq}}</div><div><b>Input :</b>{{inputseq}}</div>
+        <span><b>RefSeq :</b>{{refseq}}</div><div><b>Input :</b>{{inputseq}}</span>
         </div>
     <div class="seq-table" id="prot_display">
         <div class='header'>
-            <div><b>Proteines:</b></div>
+            <span><b>Proteines:</b></span>
                 </div>
         {% for sub_table in seq_array.prot %}
             <div class='row'>
                 <div class='accession'>
-                    <div>refSeq</div>
-                    <div>input</div>
-                    <div>match</div>
-                    </div>
-                <div class='numberline start'>{{ sub_table.number_start }}</div>
-                <table class='sequence'>
-                    <tr class='refSeq'>
+                    <span>refSeq</span>
+                    <span>input</span>
+                    <span>match</span>
+                </div>
+                <span class='numberline start'>{{ sub_table.number_start }}</span>
+                <div class='sequence'>
+                    <div class='refSeq'>
                         {{ sub_table.refseq|protAsTable:sub_table.number_start }}
-                        </tr>
-                    <tr class='inputseq'>
+                    </div>
+                    <div class='inputseq'>
                         {{ sub_table.inputseq|protAsTable:sub_table.number_start }}
-                        </tr>
-                    <tr class='mismatch'>
+                        </div>
+                    <div class='mismatch'>
                         {{ sub_table.match|protAsTable:sub_table.number_start }}
-                        </tr>
-                    </table>
-                <div class='numberline end'>{{ sub_table.number_end }}</div>
+                        </div>
+                    </div>
+                <span class='numberline end'>{{ sub_table.number_end }}</span>
                 </div>
             {% endfor %}
         </div>
@@ -43,23 +43,23 @@
         {% for sub_table in seq_array.nucl %}
             <div class='row'>
                 <div class='accession'>
-                    <div>refSeq</div>
-                    <div>input</div>
-                    <div>match</div>
+                    <span>refSeq</span>
+                    <span>input</span>
+                    <span>match</span>
                     </div>
-                <div class='numberline start'>{{ sub_table.number_start }}</div>
-                <table class='sequence'>
-                    <tr class='refSeq'>
+                <span class='numberline start'>{{ sub_table.number_start }}</span>
+                <div class='sequence'>
+                    <div class='refSeq'>
                         {{ sub_table.refseq|nuclAsTable:sub_table.number_start }}
-                        </tr>
-                    <tr class='inputseq'>
+                    </div>
+                    <div class='inputseq'>
                         {{ sub_table.inputseq|nuclAsTable:sub_table.number_start }}
-                        </tr>
-                    <tr class='mismatch'>
+                    </div>
+                    <div class='mismatch'>
                         {{ sub_table.match|nuclAsTable:sub_table.number_start }}
-                        </tr>
-                    </table>
-                <div class='numberline end'>{{ sub_table.number_end }}</div>
+                    </div>
+                </div>
+                <span class='numberline end'>{{ sub_table.number_end }}</span>
                 </div>
             {% endfor %}
         </div>

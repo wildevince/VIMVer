@@ -146,9 +146,26 @@ div.sequence{
 
 }
 
-div.sequence td{
-  padding: 5px;
+div.accession span {
+  display: block;
+  width: 6em;
 }
+span.start {
+  width: 1em;
+  padding-left: 0.5em; 
+  padding-right: 0.5em;
+}
+span.end {
+  width: 1em;
+  padding-left: 0.5em; 
+}
+.sequence span {
+  display: inline-block;
+  font-size: large;
+  width: 0.65em;
+}
+
+
 
 table {
   border-collapse: separate;
@@ -165,9 +182,6 @@ div.forms form{
   color: rgb(230, 230, 230)
 }
 
-table.sequence td {
-  padding: 0px; 
-}
 
 [data-residu='-'] {color: gray;}
 [data-residu='*'] {background: rgb(220, 220, 220); color: gray; }
@@ -212,7 +226,7 @@ div#nucl_display [data-residu='N'] {color: gray;}
 div#prot_display [data-residu='X'] {color: gray;}
 
 
-td[highlighted='true']{
+.sequence span[highlighted='true']{
   background: rgb(220, 220, 220);
   color: black;
   border-top: 1px dotted;
@@ -220,7 +234,7 @@ td[highlighted='true']{
   border-color: black;
 }
 
-td[hover='true'] {
+.sequence span[hover='true'] {
   background: rgb(100, 100, 100);
 }
 
