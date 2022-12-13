@@ -202,3 +202,72 @@ def cutToString(text:str, nbr=120):
 
 def generate_key():
     return ''.join(choice(ascii_letters + digits) for _ in range(6))
+
+
+
+def DrawnProtein(length:int, title:str ,Mutations:list, **kwargs):
+    import drawSvg as draw
+    max_width:int = 400
+    max_height:int = 100
+
+    scale:float=max_width/length
+
+    d = draw.Drawing(max_width, max_height, origin='center', displayInline=False)
+
+    ## draw background 
+    d.append(draw.Rectangle(-max_width/2, -max_height/2, max_width, max_height, fill='white'))
+
+    X:int = int(-max_width/2)   # x: -max_width/2 = -200
+    Y:int = int(-2*max_height/20)  # y: -1*max_height/20 = -10
+    W:int = int(max_width)      # width: max_width = 400
+    H:int = int(2*max_height/10) # heigth: 2*max_height/10 = 20
+    r = draw.Rectangle(X, Y, W, H, fill="blue")
+    r.appendTitle(title)
+    d.append(r)
+
+    last_mutation_x:bool = False
+    last_mutation_i:int = 0
+
+    for mutation in Mutations:
+
+        def mutation_toString():
+            return mutation[0]+str(mutation[1])+mutation[2]
+
+        pos_i = mutation[1]
+        pos_x = int(X+pos_i*scale)
+        if(last_mutation_i == pos_x):
+            pos_x += 1
+        sx = pos_x
+        sy = Y-5 # -35
+        ex = pos_x
+        ey = -Y+5 # +35
+        if(last_mutation_x) :
+            ey += 10 # +50
+        else:
+            sy -= 10 # -50
+        d.append(draw.Line(sx,sy,ex,ey,stroke="black", stroke_width=1, fill='none', marker_end='none'))
+
+        if(last_mutation_x) :
+            d.append(draw.Text(mutation_toString(), 6, x=pos_x-5, y=ey+5 ))
+        else:
+            d.append(draw.Text(mutation_toString(), 6, x=pos_x-5, y=sy-5 ))
+
+        last_mutation_x = not last_mutation_x
+        last_mutation_i = pos_x
+        #print(mutation_toString(), sx)
+    
+    ## caption
+    ### draw title 
+    d.append(draw.Text(title, 14, x=-max_width/2+5, y=max_height/2-12))
+    ### draw caption
+    d.append(draw.Text('Nter', 8, x=X+1, y=0, fill='white'))
+    d.append(draw.Text('Cter', 8, x=-X-16, y=0, fill='white'))
+    ### draw scale value
+    d.append(draw.Text("scale: 1/"+str(scale), 8, x=max_width/2-45, y=-max_height/2+1))
+    
+    ## display
+    d.setPixelScale(2)
+    d.saveSvg('example.svg')
+    d.savePng('example.png')
+    d.rasterize()
+    return d
