@@ -13,3 +13,7 @@ ViralOceanView/ViralOceanView/file/example.svg
 ViralOceanView/ViralOceanView/file/example.png
 ViralOceanView/ViralOceanView/file/PDB_manager.py
 ViralOceanView/ViralOceanView/file/pdb_parse.py
+ViralOceanView/ViralOceanView/file/out.txt
+.gitignore
+ViralOceanView/ViralOceanView/file/hca-1671194751.ps
+ViralOceanView/ViralOceanView/file/hhpred_5727792.hhr
