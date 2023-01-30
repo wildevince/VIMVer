@@ -49,7 +49,7 @@ from OceanFinder.models import Job, OutBlast
 
 from OceanFinder.scr.OceanBlaster import complete
 from OceanFinder.scr.OceanFinder import searchRefseq_by_accession, my_translate
-
+from OceanFinder.scr.OceanFigure import GetMutations, draw_figure
 
 
 # Create your views here.
@@ -72,8 +72,19 @@ class viewer(TemplateView):
             else: 
                 sequences = Sequence.objects.filter(job=job)
                 refseq = sequences.get(isRefSeq=True)
-                inputSeq = sequences.get(isRefSeq=False)   
+                inputSeq = sequences.get(isRefSeq=False)  
+                
+                ## calculate mutations Figures
+                figure_prot_mutation = GetMutations(refseq.prot_seq, inputSeq.prot_seq)
+                figure_nucl_mutation = GetMutations(refseq.cds_seq, inputSeq.cds_seq)
+                context_nucl_mutation:dict  = draw_figure(jobKey, inputSeq.used_name, "rna", "mutation", len(refseq.cds_seq), figure_nucl_mutation)
+                figure_width = context_nucl_mutation.get("max_width")
+                figure_height = context_nucl_mutation.get("max_height")
+                context['figure_prot_mutation'] = draw_figure(jobKey, inputSeq.used_name, "protein", "mutation", len(refseq.prot_seq), figure_prot_mutation, max_width=figure_width, max_height=figure_height)
+                context['figure_nucl_mutation'] = context_nucl_mutation.get("path")
                 match_prot = generate3rdline(refseq.prot_seq, inputSeq.prot_seq)
+
+                ## prepare sequences for display OceanViewer
                 match_nucl = generate3rdline(refseq.cds_seq, inputSeq.cds_seq, True)
                 seq_array = {
                     'prot': giveMe_seqArray(refseq.prot_seq, inputSeq.prot_seq, match_prot, 20),

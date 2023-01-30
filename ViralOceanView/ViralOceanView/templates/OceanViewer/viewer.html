@@ -8,6 +8,11 @@
 {% block content %}
 {% load OceanViewer_extras %}
 {% if seq_array %}
+    <div class='svgFigure'>
+        <img id="figure_prot_mutation" path="{{figure_prot_mutation}}" >
+        <img id="figure_nucl_mutation" path="{{figure_nucl_mutation}}">
+        </div>
+        
     <div class='header'>
         <span><b>RefSeq :</b>{{refseq}}</div><div><b>Input :</b>{{inputseq}}</span>
         </div>

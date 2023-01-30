@@ -34,6 +34,33 @@ $(document).ready(function() {
 		});
 
 	});
+
+	function fileExists(url) {
+		if(url){
+			var req = new XMLHttpRequest();
+			req.open('GET', url, false);
+			req.send();
+			return req.status==200;
+		} else {
+			return false;
+		}
+	}
+
+	$.fn.searchForFigure = function(){
+		this.each(function() {
+			var filepath = $(this).attr('path');
+			if(fileExists(filepath)) {
+				$(this).attr("src", filepath);
+				$(this).removeAttr("path");
+			} else {
+				setTimeout( $(this).searchForFigure(),5000);
+			}
+		})
+	}
+	// load svg figure on OceanView
+	$("#figure_prot_mutation").searchForFigure();
+	$("#figure_nucl_mutation").searchForFigure();
+	
 	
 	$(function() {
 		$("div.p-row").tooltip({track:true});
@@ -53,5 +80,9 @@ $(document).ready(function() {
 		$(".infoPanel").Attr("hidden");
 		$("#infoPanel-contact").removeAttr("hidden");
 	});
+
+
+	
+
 
 })
