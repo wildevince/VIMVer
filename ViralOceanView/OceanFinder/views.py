@@ -69,7 +69,7 @@ class index(TemplateView):
         if 'input' in request.POST:
             if query.is_valid():
                 
-                jobKey = generate_key()
+                jobKey = generate_key() # re-generate new jobkey if already used
                 while len(Job.objects.filter(key = jobKey))>0:
                     jobKey = generate_key()
 
