@@ -39,7 +39,7 @@ import json
 
 
 ###########    DEVELOPMENT    ##################
-#with open("/etc/VIMVer/config.json", 'r') as f :
+# with open("/etc/VIMVer/config.json", 'r') as f :
 #    config_data = json.load(f)
 
 
@@ -62,10 +62,11 @@ DEBUG = True
 
 
 #ALLOWED_HOSTS = config_data['ALLOWED_HOSTS']
-ALLOWED_HOSTS = ['127.0.0.1'] # , '10.1.2.200', 'vimver.afmb.univ-mrs.fr']   
+# , '10.1.2.200', 'vimver.afmb.univ-mrs.fr']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 # 'localhost', '127.0.0.1'
 # 'VM', '10.1.2.200'
-#'139.124.83.212',
+# '139.124.83.212',
 
 # Application definition
 
@@ -91,7 +92,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+
 ]
 
 ROOT_URLCONF = 'ViralOceanView.urls'
@@ -102,7 +103,7 @@ TEMPLATES = [
         'DIRS': [
             # Cette ligne ajoute le dossier templates/ à la racine du projet
             path.join(Temp_DIR, 'templates'),
-            ],
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,7 +128,6 @@ DATABASES = {
         'NAME': path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 
 # Password validation
@@ -167,7 +167,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = path.join(BASE_DIR,'static')
+STATIC_ROOT = path.join(BASE_DIR, 'static')
 #STATICFILES_DIRS = (path.join(BASE_DIR, 'ViralOceanView', 'static'),)
 
 # django debug toolbar
@@ -176,7 +176,7 @@ INTERNAL_IPS = ['127.0.0.1']
 # Media files (data, in-file, out-file)
 
 # ViralOceanView/data_test/
-DATATEST = path.join(path.dirname(BASE_DIR), "data_test") 
+DATATEST = path.join(path.dirname(BASE_DIR), "data_test")
 
 
 MEDIA_URL = 'file/'
@@ -184,4 +184,4 @@ MEDIA_ROOT = path.join(BASE_DIR, 'ViralOceanView', 'file')
 
 
 # ./ViralOceanView/files/dataBase_local/
-DATABASE = path.join(MEDIA_ROOT, "dataBase_local")  
+DATABASE = path.join(MEDIA_ROOT, "dataBase_local")

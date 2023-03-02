@@ -75,10 +75,6 @@ body {
   background-color: rgb(200,200,200);
   margin: 2em;
 }
-#infoPanel-project {
-  display: none;
-  opacity: 0;
-}
 #infoPanel-help li {
   margin-top: 1em;
   margin-bottom: 1em;
@@ -241,6 +237,9 @@ div#prot_display [data-residu='X'] {color: gray;}
 a {
   background: grey;
 }
+
+
+
 
 .last {
   margin-bottom: 3em;
