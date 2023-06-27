@@ -241,3 +241,31 @@ footer {
   background-color: rgb(100, 100, 100);
   clear: both;
 }
+
+
+.cookie-banner {
+  position: fixed;
+  bottom: 10%;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  color: black;
+  background-color: #f1f1f1;
+  text-align: center;
+}
+
+.cookie-banner p {
+  margin: 0;
+}
+
+.cookie-banner button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.cookie-banner button:hover {
+  background-color: #45a049;
+}

@@ -5,6 +5,7 @@
     {% load static %}
    <link rel="stylesheet" type="text/css" href="{% static 'OceanViewer/css/OceanViewer.css' %}">
    <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script src="{% static 'OceanViewer/js/OceanViewer.js' %}" ></script>
    {% block JS.js %}{% endblock %}
    {% block css %}{% endblock %}
    <title>{% block title %}VIMVer{% endblock %}</title>
@@ -108,6 +109,10 @@
     </section>
 
 
+<div id="cookie-banner" class="cookie-banner">
+    <p>This website uses cookies. By using this website, you agree to our use of cookies.</p>
+  <button id="cookie-accept">Accept</button></div>
+  
 
 <footer>&copy; Viral Instant Mutation Viewer</footer>
 </body>
