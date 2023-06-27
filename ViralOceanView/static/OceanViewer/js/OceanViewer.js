@@ -48,6 +48,18 @@ $(document).ready(function() {
 		$("#infoPanel-contact").removeAttr("hidden");
 	});
 
+
+
+	//// Help from chatGPT 
+	// Check if the cookie has already been accepted
+	var cookieAccepted = getCookie("cookie-accepted");
+	if (cookieAccepted) {
+	  $("#cookie-banner").hide();
+	} else {
+	  $("#cookie-accept").on("click", acceptCookie);
+	}
+	
+
 })
 
 
@@ -86,10 +98,5 @@ function setCookie(name, value, days) {
 	setCookie("cookie-accepted", "true", 365); // Cookie will expire in 365 days
   }
   
-  // Check if the cookie has already been accepted
-  var cookieAccepted = getCookie("cookie-accepted");
-  if (cookieAccepted) {
-	$("#cookie-banner").hide();
-  } else {
-	$("#cookie-accept").click(acceptCookie);
-  }
+  
+  
