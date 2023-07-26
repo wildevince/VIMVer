@@ -73,12 +73,27 @@ body {
   width: 42%;
   height: fit-content;
   background-color: rgb(200,200,200);
-  margin: 2em;
+  margin: 1em;
+  padding: 0.5em;
 }
-#infoPanel-project {
-  display: none;
-  opacity: 0;
+
+#infoPanel-project .citation {
+  font-weight: bold;
+  font-size: large;
+  margin-bottom: 2em;
 }
+
+#infoPanel-project .citation a {
+  background-color: rgb(200,200,200);
+}
+
+#infoPanel-project .article-details {
+  font-size: smaller;
+  padding: 1em;
+  background-color: rgb(220,220,220);
+}
+
+
 #infoPanel-help li {
   margin-top: 1em;
   margin-bottom: 1em;
